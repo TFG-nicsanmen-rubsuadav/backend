@@ -1,4 +1,7 @@
 # Instalation
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/05faa569abc5445783b47c3022453234)](https://app.codacy.com/gh/TFG-nicsanmen-rubsuadav/backend?utm_source=github.com&utm_medium=referral&utm_content=TFG-nicsanmen-rubsuadav/backend&utm_campaign=Badge_Grade)
+
 You need to create a virtual environment and install the requirements using the following commands:
 ```bash
 python -m venv venv
