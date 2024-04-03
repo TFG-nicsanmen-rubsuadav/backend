@@ -1,5 +1,5 @@
 # local imports
-from .utils import validate_user_creation, check_roles, get_allowed_roles
+from .utils import validate_user_creation, check_roles, get_allowed_roles, hash_password
 from conf.firebase import firestore
 
 
@@ -29,7 +29,7 @@ def create_user(user: dict, role_id: str | None = None):
             "email": user["email"],
             "phone": user["phone"],
             "birth_date": user["birth_date"],
-            "password": user["password"]
+            "password": hash_password(user["password"])
         })
         asociate_rol_with_user(user_ref.id, user["rol"], role_id)
     except ValueError as e:

@@ -1,6 +1,7 @@
 from datetime import datetime
 import re
 import secrets
+import hashlib
 
 # local imports
 from .constants import (
@@ -15,10 +16,10 @@ from .constants import (
     PASSWORD_DIGIT,
     ROLES, ROLE_NOT_ALLOWED
 )
-
 from conf.firebase import firestore
 
 
+# VALIDATION METHODS #####################################
 def validate_unique_email(email):
     emails = firestore.collection("users").stream()
     for e in emails:
@@ -68,6 +69,7 @@ def validate_user_creation(user):
         raise ValueError(PASSWORD_SPECIAL_CHAR)
 
 
+# UTILS METHODS ##########################################
 def get_allowed_roles(role: str):
     if role not in ROLES:
         raise ValueError(ROLE_NOT_ALLOWED)
@@ -79,6 +81,10 @@ def check_roles(rol: str) -> str | bool:
         if r.to_dict()["name"] == rol:
             return r.id
     return False
+
+
+def hash_password(password: str) -> str:
+    return hashlib.sha256(password.encode(encoding="utf-8")).hexdigest()
 
 
 # TESTS UTILS METHODS #####################################
