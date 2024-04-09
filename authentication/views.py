@@ -3,11 +3,10 @@ from rest_framework import views
 from rest_framework import status
 
 # using to implements register and login logic
-from conf.firebase import auth, app
+from conf.firebase import auth
 
 # using to update some parameters of the user
 from firebase_admin import auth as auth_admin
-from firebase_admin._auth_client import Client
 
 # local imports
 from .models import create_user, create_role
