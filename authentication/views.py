@@ -40,6 +40,6 @@ class RegisterView(views.APIView):
                 user['idToken'], display_name=request.data['name'] + ' ' + request.data['last_name'])
             auth_admin.update_user(
                 user["localId"], phone_number='+34' + request.data['phone'])
-            return Response(data={'sucess': 'user created successfully!'}, status=status.HTTP_201_CREATED)
+            return Response(data={'message': 'user created successfully!'}, status=status.HTTP_201_CREATED)
         except Exception as e:
             return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)

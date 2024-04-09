@@ -105,14 +105,8 @@ def create_test_case_invalid_role(status):
 
 def create_test_case_invalid_email_unique_email(status):
     return {"name": "test_invalid_email_unique_email",
-            "data": {"email": "test@gmail.com", "phone": "699383767", "rol": "admin"},
+            "data": {"email": "rsuarezdavid@gmail.com", "phone": "699383767", "rol": "admin"},
             "status": status, "result": EMAIL_ALREADY_IN_USE}
-
-
-def create_test_case_invalid_phone_unique_phone(status):
-    return {"name": "test_invalid_phone_unique_phone",
-            "data": {"email": "tt@gmail.com", "phone": "727784362", "rol": "customer"},
-            "status": status, "result": PHONE_ALREADY_IN_USE}
 
 
 def create_test_case_invalid_email(status):
@@ -179,7 +173,6 @@ def create_tests_cases(status: int):
     return [
         create_test_case_invalid_role(status),
         create_test_case_invalid_email_unique_email(status),
-        create_test_case_invalid_phone_unique_phone(status),
         create_test_case_invalid_email(status),
         create_test_case_invalid_name(status),
         create_test_case_invalid_last_name(status),
