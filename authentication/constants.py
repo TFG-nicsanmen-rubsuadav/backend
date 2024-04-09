@@ -12,3 +12,5 @@ EMAIL_ALREADY_IN_USE = "Email already in use"
 PHONE_ALREADY_IN_USE = "Phone already in use"
 ROLE_NOT_ALLOWED = "Role not allowed"
 ROLES = ["admin", "owner", "customer", "authorizated"]
+EMAIL_REGEX = r'^\w+([.-]?\w+)*@((gmail|hotmail|outlook)\.com|alum\.us\.es)$'
+PHONE_REGEX = r'^(\\+34|0034|34)?[ -]*(6|7)[ -]*([0-9][ -]*){8}$'

@@ -14,32 +14,32 @@ from .constants import (
     PASSWORD_LOWERCASE,
     PASSWORD_UPPERCASE,
     PASSWORD_DIGIT,
-    ROLES, ROLE_NOT_ALLOWED
+    ROLES, ROLE_NOT_ALLOWED,
+    EMAIL_REGEX, PHONE_REGEX
 )
 from conf.firebase import firestore
 
 
 # VALIDATION METHODS #####################################
-def validate_unique_email(email):
+def validate_unique_email(email: str):
     emails = firestore.collection("users").stream()
     for e in emails:
         if e.to_dict()["email"] == email:
             raise ValueError(EMAIL_ALREADY_IN_USE)
 
 
-def validate_unique_phone(phone):
+def validate_unique_phone(phone: str):
+    phone = phone.replace(" ", "")
     phones = firestore.collection("users").stream()
     for p in phones:
-        if p.to_dict()["phone"] == phone:
+        if p.to_dict()["phone"].replace(" ", "") == phone:
             raise ValueError(PHONE_ALREADY_IN_USE)
 
 
-def validate_user_creation(user):
+def validate_user_creation(user: dict):
     validate_unique_email(user["email"])
     validate_unique_phone(user["phone"])
-    email_regex = r'^\w+([.-]?\w+)*@(gmail|hotmail|outlook)\.com$'
-    phone_regex = r'^(\\+34|0034|34)?[ -]*(6|7)[ -]*([0-9][ -]*){8}$'
-    if not re.match(email_regex, user["email"]):
+    if not re.match(EMAIL_REGEX, user["email"]):
         raise ValueError(WRONG_EMAIL)
 
     if len(user["name"]) < 3:
@@ -48,7 +48,7 @@ def validate_user_creation(user):
     if len(user['last_name']) < 3:
         raise ValueError(LAST_NAME_LENGTH)
 
-    if not re.match(phone_regex, user['phone']):
+    if not re.match(PHONE_REGEX, user['phone']):
         raise ValueError(PHONE_MALFORMED)
 
     try:
