@@ -1,10 +1,6 @@
 name: Python application
 
-on:
-  pull_request:
-    branches:
-      - master
-      - develop
+on: ["pull_request"]
 
 jobs:
 
@@ -16,7 +12,7 @@ jobs:
     steps:
       - uses: thehanimo/pr-title-checker@v1.4.0
         with:
-          GITHUB_TOKEN: ${{ secrets.PR_CHECKER_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           pass_on_octokit_error: false
           configuration_path: ".github/pr-title-checker-config.json"
 
