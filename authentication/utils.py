@@ -2,6 +2,8 @@ from datetime import datetime
 import re
 import secrets
 import hashlib
+from google.cloud.firestore import FieldFilter
+
 
 # local imports
 from .constants import (
@@ -18,6 +20,12 @@ from .constants import (
     EMAIL_REGEX, PHONE_REGEX
 )
 from conf.firebase import firestore
+
+# using to implements register and login logic
+from conf.firebase import auth
+
+# using to update some parameters of the user
+from firebase_admin import auth as auth_admin
 
 
 # VALIDATION METHODS #####################################
@@ -95,6 +103,24 @@ def check_roles(rol: str) -> str | bool:
 
 def hash_password(password: str) -> str:
     return hashlib.sha256(password.encode(encoding="utf-8")).hexdigest()
+
+
+def get_user_role_by_email(email: str) -> str:
+    firestore_user = firestore.collection(
+        'users').where(filter=FieldFilter(
+            'email', '==', email)).get()[0]
+    return firestore_user.reference.collection(
+        'role').get()[0].to_dict()['name']
+
+
+def register_user(data: dict):
+    user = auth.create_user_with_email_and_password(
+        data['email'], data['password'])
+
+    auth.update_profile(
+        user['idToken'], display_name=data['name'] + ' ' + data['last_name'])
+    auth_admin.update_user(
+        user["localId"], phone_number='+34' + data['phone'])
 
 
 # TESTS UTILS METHODS #####################################
