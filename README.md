@@ -6,7 +6,7 @@
 
 [![Codacy Analysis CLI](https://github.com/TFG-nicsanmen-rubsuadav/backend/actions/workflows/analysis.yml/badge.svg)](https://github.com/TFG-nicsanmen-rubsuadav/backend/actions/workflows/analysis.yml)
 
-[![Conventional Commits Check 😊](https://github.com/TFG-nicsanmen-rubsuadav/backend/actions/workflows/conventional_commits.yml/badge.svg)](https://github.com/TFG-nicsanmen-rubsuadav/backend/actions/workflows/conventional_commits.yml)
+[![Conventional Commits Check](https://github.com/TFG-nicsanmen-rubsuadav/backend/actions/workflows/conventional_commits.yml/badge.svg)](https://github.com/TFG-nicsanmen-rubsuadav/backend/actions/workflows/conventional_commits.yml)
 
 [![Python application](https://github.com/TFG-nicsanmen-rubsuadav/backend/actions/workflows/pr-title-checker.yml/badge.svg)](https://github.com/TFG-nicsanmen-rubsuadav/backend/actions/workflows/pr-title-checker.yml)
 
