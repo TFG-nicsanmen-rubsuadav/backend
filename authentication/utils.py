@@ -75,7 +75,7 @@ def check_password(password: str):
         raise ValueError(PASSWORD_UPPERCASE)
     if not re.search('[0-9]', password):
         raise ValueError(PASSWORD_DIGIT)
-    if not re.search('[!#$%&()*+,-./:;<=>?@[\]^_`{|}~]', password):
+    if not re.search('[!#$%&()*"+,-./:;<=>?@[\]^_`{|}~]', password):
         raise ValueError(PASSWORD_SPECIAL_CHAR)
 
 

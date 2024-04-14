@@ -17,7 +17,8 @@ def create_valid_user():
 
     mail = fetch.json()['results'][0]['email'].replace('example', 'gmail')
     password = fetch.json()['results'][0]['login']['password']
-    password += secrets.choice(string.punctuation)
+    punctuation = string.punctuation.replace("'", "")
+    password += secrets.choice(punctuation)
     password += secrets.choice(string.ascii_uppercase)
     password += secrets.choice(string.digits)
     name = fetch.json()['results'][0]['name']['first']
