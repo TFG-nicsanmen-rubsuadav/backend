@@ -1,5 +1,15 @@
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/019fefdf399b4fbf98b009ef7e82820a)](https://app.codacy.com/gh/TFG-nicsanmen-rubsuadav/backend/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
 
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/019fefdf399b4fbf98b009ef7e82820a)](https://app.codacy.com/gh/TFG-nicsanmen-rubsuadav/backend/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
+
+[![Python application tests and coverage](https://github.com/TFG-nicsanmen-rubsuadav/backend/actions/workflows/tests.yml/badge.svg)](https://github.com/TFG-nicsanmen-rubsuadav/backend/actions/workflows/tests.yml)
+
+[![Codacy Analysis CLI](https://github.com/TFG-nicsanmen-rubsuadav/backend/actions/workflows/analysis.yml/badge.svg)](https://github.com/TFG-nicsanmen-rubsuadav/backend/actions/workflows/analysis.yml)
+
+[![Conventional Commits Check 😊](https://github.com/TFG-nicsanmen-rubsuadav/backend/actions/workflows/conventional_commits.yml/badge.svg)](https://github.com/TFG-nicsanmen-rubsuadav/backend/actions/workflows/conventional_commits.yml)
+
+[![Python application](https://github.com/TFG-nicsanmen-rubsuadav/backend/actions/workflows/pr-title-checker.yml/badge.svg)](https://github.com/TFG-nicsanmen-rubsuadav/backend/actions/workflows/pr-title-checker.yml)
+
 # Instalation
 You need to create a virtual environment and install the requirements using the following commands:
 ```bash
