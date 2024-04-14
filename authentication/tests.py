@@ -10,6 +10,7 @@ import secrets
 # local imports
 from .utils import get_test_data, generate_phone_number
 from .constants import EMAIL_ALREADY_IN_USE, PHONE_ALREADY_IN_USE
+from local_settings import EMAIL, PASSWORD
 
 
 def create_valid_user():
@@ -29,15 +30,24 @@ def create_valid_user():
 
 
 class CreateUsersAdminTest(APITestCase):
-    def post_data(self, data: dict, expected_status: int, expected_message: str):
+    def get_token_admin(self):
+        response = self.client.post('/auth/login/', data=json.dumps({
+            "email": EMAIL,
+            "password": PASSWORD
+        }), content_type='application/json')
+        return response.data['user']['idToken']
+
+    def post_data(self, data: dict, expected_status: int, expected_message: str, token: str = None):
+        headers = {'Authorization': token} if token else {'Authorization': ''}
         response = self.client.post(
-            '/auth/create/', json.dumps(data), content_type='application/json')
+            '/auth/create/', json.dumps(data), content_type='application/json', headers=headers)
         self.assertEqual(response.status_code, expected_status)
         self.assertEqual(response.data["message"], expected_message)
 
-    @parameterized.expand(get_test_data(status.HTTP_400_BAD_REQUEST))
+    @ parameterized.expand(get_test_data(status.HTTP_400_BAD_REQUEST))
     def test_invalid_data(self, _, data: dict, expected_status: int, expected_message: str):
-        self.post_data(data, expected_status, expected_message)
+        self.post_data(data, expected_status, expected_message,
+                       self.get_token_admin())
 
     def test_valid_user_creation(self):
         name, last_name, mail, phone_number, password = create_valid_user()
@@ -52,7 +62,22 @@ class CreateUsersAdminTest(APITestCase):
         }
 
         self.post_data(data, status.HTTP_201_CREATED,
-                       "User created successfully")
+                       "User created successfully", self.get_token_admin())
+
+    def test_invalid_token(self):
+        name, last_name, mail, phone_number, password = create_valid_user()
+        data = {
+            "name": name,
+            "last_name": last_name,
+            "email": mail,
+            "phone": phone_number,
+            "birth_date": "12/10/2019",
+            "password": password,
+            "rol": "customer"
+        }
+
+        self.post_data(data, status.HTTP_401_UNAUTHORIZED,
+                       "Token is missing", None)
 
 
 class RegisterViewTest(APITestCase):
@@ -101,6 +126,7 @@ class LoginViewTest(APITestCase):
         response = self.client.post(
             '/auth/login/', json.dumps(data), content_type='application/json')
         self.assertEqual(response.status_code, expected_status)
+        return response
 
     def test_invalid_login(self):
         self.login_data({"email": "xfsfdhg@gmail.com",
@@ -108,15 +134,23 @@ class LoginViewTest(APITestCase):
 
     def test_valid_login(self):
         name, last_name, mail, phone_number, password = create_valid_user()
+        data = {
+            "name": name,
+            "last_name": last_name,
+            "email": mail,
+            "phone": phone_number,
+            "birth_date": "12/10/2019",
+            "password": password,
+        }
         self.client.post(
-            '/auth/register/', json.dumps({
-                "name": name,
-                "last_name": last_name,
-                "email": mail,
-                "phone": phone_number,
-                "birth_date": "12/10/2019",
-                "password": password,
-            }), content_type='application/json')
+            '/auth/register/', json.dumps(data), content_type='application/json')
 
-        self.login_data({"email": mail, "password": password},
-                        status.HTTP_200_OK)
+        response = self.login_data({"email": mail, "password": password},
+                                   status.HTTP_200_OK)
+
+        headers = {'Authorization': response.data['user']['idToken']}
+        response2 = self.client.post(
+            '/auth/create/', json.dumps(data), content_type='application/json', headers=headers)
+        self.assertEqual(response2.status_code, status.HTTP_403_FORBIDDEN)
+        self.assertEqual(response2.data["message"],
+                         "Only admins can create users")

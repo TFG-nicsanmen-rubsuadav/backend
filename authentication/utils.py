@@ -1,6 +1,8 @@
 import secrets
 import hashlib
 from google.cloud.firestore import FieldFilter
+from rest_framework import status
+from rest_framework.response import Response
 
 
 # local imports
@@ -58,6 +60,16 @@ def register_user(data: dict):
         user['idToken'], display_name=data['name'] + ' ' + data['last_name'])
     auth_admin.update_user(
         user["localId"], phone_number='+34' + data['phone'])
+
+
+def check_permmisions(id_token: str):
+    decoded_token = auth_admin.verify_id_token(
+        id_token, clock_skew_seconds=60)
+
+    role = get_user_role_by_email(decoded_token['email'])
+
+    if role != 'admin':
+        return Response({'message': 'Only admins can create users'}, status=status.HTTP_403_FORBIDDEN)
 
 
 # TESTS UTILS METHODS #####################################

@@ -5,12 +5,9 @@ from rest_framework import status
 # using to implements register and login logic
 from conf.firebase import auth
 
-# using to update some parameters of the user
-from firebase_admin import auth as auth_admin
-
 # local imports
 from .models import create_user, create_role
-from .utils import get_user_role_by_email, register_user
+from .utils import get_user_role_by_email, register_user, check_permmisions
 from .validations import validate_login
 
 
@@ -22,12 +19,8 @@ class CreateUsersAdminView(views.APIView):
             return Response({'message': 'Token is missing'}, status=status.HTTP_401_UNAUTHORIZED)
 
         try:
-            decoded_token = auth_admin.verify_id_token(id_token)
-
-            role = get_user_role_by_email(decoded_token['email'])
-
-            if role != 'admin':
-                return Response({'message': 'Only admins can create users'}, status=status.HTTP_403_FORBIDDEN)
+            if (check_permmisions(id_token)):
+                return check_permmisions(id_token)
 
             role_id = create_role(request.data['rol'])
             create_user(request.data, role_id)
