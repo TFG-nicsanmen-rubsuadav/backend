@@ -10,7 +10,8 @@ from firebase_admin import auth as auth_admin
 
 # local imports
 from .models import create_user, create_role
-from .utils import validate_login, get_user_role_by_email, register_user
+from .utils import get_user_role_by_email, register_user
+from .validations import validate_login
 
 
 class CreateUsersAdminView(views.APIView):

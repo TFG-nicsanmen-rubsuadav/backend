@@ -1,6 +1,7 @@
 # local imports
-from .utils import validate_user_creation, check_roles, get_allowed_roles, hash_password
 from conf.firebase import firestore
+from .utils import check_roles, get_allowed_roles, hash_password
+from .validations import validate_user_creation
 
 
 # Role model
