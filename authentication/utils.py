@@ -56,7 +56,17 @@ def validate_user_creation(user: dict):
     except ValueError:
         raise ValueError(BIRTH_DATE_FORMAT)
 
-    password = user['password']
+    check_password(user["password"])
+
+
+def validate_login(data: dict):
+    if not re.match(EMAIL_REGEX, data["email"]):
+        raise ValueError(WRONG_EMAIL)
+
+    check_password(data["password"])
+
+
+def check_password(password: str):
     if len(password) < 8:
         raise ValueError(PASSWORD_LENGTH)
     if not re.search('[a-z]', password):

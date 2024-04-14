@@ -93,3 +93,29 @@ class RegisterViewTest(APITestCase):
             "birth_date": "12/10/2019",
             "password": password,
         }, status.HTTP_201_CREATED, "user created successfully!")
+
+
+class LoginViewTest(APITestCase):
+    def login_data(self, data: dict, expected_status: int):
+        response = self.client.post(
+            '/auth/login/', json.dumps(data), content_type='application/json')
+        self.assertEqual(response.status_code, expected_status)
+
+    def test_invalid_login(self):
+        self.login_data({"email": "xfsfdhg@gmail.com",
+                         "password": "password"}, status.HTTP_400_BAD_REQUEST)
+
+    def test_valid_login(self):
+        name, last_name, mail, phone_number, password = create_valid_user()
+        self.client.post(
+            '/auth/register/', json.dumps({
+                "name": name,
+                "last_name": last_name,
+                "email": mail,
+                "phone": phone_number,
+                "birth_date": "12/10/2019",
+                "password": password,
+            }), content_type='application/json')
+
+        self.login_data({"email": mail, "password": password},
+                        status.HTTP_200_OK)

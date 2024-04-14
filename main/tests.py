@@ -10,7 +10,7 @@ from .scrapping import get_restaurants
 
 class Test(APITestCase):
     def test_scrap_and_store_in_DB(self):
-        response = self.client.get('/')
+        response = self.client.get('/scrapping/')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(len(response.json()), 45)
 

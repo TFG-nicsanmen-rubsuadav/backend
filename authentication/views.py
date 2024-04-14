@@ -3,13 +3,15 @@ from rest_framework import views
 from rest_framework import status
 
 # using to implements register and login logic
-from conf.firebase import auth
+from conf.firebase import auth, firestore
+from google.cloud.firestore import FieldFilter
 
 # using to update some parameters of the user
 from firebase_admin import auth as auth_admin
 
 # local imports
 from .models import create_user, create_role
+from .utils import validate_login
 
 
 # TODO: Cuando estén creados los roles, a este método solo puede llamar un administrador
@@ -40,5 +42,21 @@ class RegisterView(views.APIView):
             auth_admin.update_user(
                 user["localId"], phone_number='+34' + request.data['phone'])
             return Response(data={'message': 'user created successfully!'}, status=status.HTTP_201_CREATED)
+        except Exception as e:
+            return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class LoginView(views.APIView):
+    def post(self, request):
+        try:
+            validate_login(request.data)
+            user = auth.sign_in_with_email_and_password(
+                request.data['email'], request.data['password'])
+            firestore_user = firestore.collection(
+                'users').where(filter=FieldFilter(
+                    'email', '==', request.data['email'])).get()[0]
+            role = firestore_user.reference.collection(
+                'role').get()[0].to_dict()['name']
+            return Response(data={'user': user, 'role': role}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
