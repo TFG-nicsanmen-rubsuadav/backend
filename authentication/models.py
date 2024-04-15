@@ -23,7 +23,7 @@ def create_role(role: str):
 # User model
 def create_user(user: dict, role_id: str | None = None):
     try:
-        validate_user_creation(user)
+        validate_user_creation(user, True)
         _, user_ref = firestore.collection("users").add({
             "name": user["name"],
             "last_name": user["last_name"],

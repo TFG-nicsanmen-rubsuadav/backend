@@ -29,7 +29,7 @@ def create_valid_user():
     return name, last_name, mail, phone_number, password
 
 
-class CreateUsersAdminTest(APITestCase):
+class BaseTest(APITestCase):
     def get_token_admin(self):
         response = self.client.post('/auth/login/', data=json.dumps({
             "email": EMAIL,
@@ -44,6 +44,8 @@ class CreateUsersAdminTest(APITestCase):
         self.assertEqual(response.status_code, expected_status)
         self.assertEqual(response.data["message"], expected_message)
 
+
+class CreateUsersAdminTest(BaseTest):
     @ parameterized.expand(get_test_data(status.HTTP_400_BAD_REQUEST))
     def test_invalid_data(self, _, data: dict, expected_status: int, expected_message: str):
         self.post_data(data, expected_status, expected_message,

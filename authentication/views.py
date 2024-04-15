@@ -8,9 +8,10 @@ from conf.firebase import auth, firestore
 # local imports
 from .models import create_user, create_role
 from .utils import get_user_role_by_email, register_user, check_permmisions
-from .validations import validate_login
+from .validations import validate_login, validate_user_creation
 
 
+## ADMIN VIEWS ##########################################
 class CreateUsersAdminView(views.APIView):
     def post(self, request):
         id_token = request.META.get('HTTP_AUTHORIZATION')
@@ -31,6 +32,30 @@ class CreateUsersAdminView(views.APIView):
             return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 
+class EditUserProfileAdminView(views.APIView):
+    def patch(self, request, user_id):
+        id_token = request.META.get('HTTP_AUTHORIZATION')
+
+        if not id_token:
+            return Response({'message': 'Token is missing'}, status=status.HTTP_401_UNAUTHORIZED)
+
+        try:
+            if (check_permmisions(id_token)):
+                return check_permmisions(id_token)
+
+            validate_user_creation(request.data, False)
+
+            user_ref = firestore.document('users', user_id)
+            if not user_ref.get().exists:
+                return Response({'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
+
+            user_ref.update(request.data)
+            return Response({'message': 'User profile updated successfully'}, status=status.HTTP_200_OK)
+        except Exception as e:
+            return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+## USER VIEWS ##########################################
 class RegisterView(views.APIView):
     def post(self, request):
         try:

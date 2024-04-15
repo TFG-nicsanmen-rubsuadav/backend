@@ -32,34 +32,21 @@ def validate_unique_phone(phone: str):
             raise ValueError(PHONE_ALREADY_IN_USE)
 
 
-def validate_user_creation(user: dict):
-    validate_unique_email(user["email"])
-    validate_unique_phone(user["phone"])
-    if not re.match(EMAIL_REGEX, user["email"]):
-        raise ValueError(WRONG_EMAIL)
+def validate_regex(data: str, regex: str, error: str):
+    if not re.match(regex, data):
+        raise ValueError(error)
 
-    if len(user["name"]) < 3:
-        raise ValueError(NAME_LENGTH)
 
-    if len(user['last_name']) < 3:
-        raise ValueError(LAST_NAME_LENGTH)
+def validate_length(data: str, error: str):
+    if len(data) < 3:
+        raise ValueError(error)
 
-    if not re.match(PHONE_REGEX, user['phone']):
-        raise ValueError(PHONE_MALFORMED)
 
+def validate_birth_date(birth_date: str):
     try:
-        datetime.strptime(user['birth_date'], '%d/%m/%Y')
+        datetime.strptime(birth_date, '%d/%m/%Y')
     except ValueError:
         raise ValueError(BIRTH_DATE_FORMAT)
-
-    check_password(user["password"])
-
-
-def validate_login(data: dict):
-    if not re.match(EMAIL_REGEX, data["email"]):
-        raise ValueError(WRONG_EMAIL)
-
-    check_password(data["password"])
 
 
 def check_password(password: str):
@@ -73,3 +60,28 @@ def check_password(password: str):
         raise ValueError(PASSWORD_DIGIT)
     if not re.search('[!#$%&()*"+,-./:;<=>?@[\]^_`{|}~]', password):
         raise ValueError(PASSWORD_SPECIAL_CHAR)
+
+
+## MAIN VALIDATIONS ##
+def validate_user_creation(user: dict, is_create: bool):
+    if "email" in user or is_create:
+        validate_unique_email(user["email"])
+        validate_regex(user["email"], EMAIL_REGEX, WRONG_EMAIL)
+    if "phone" in user or is_create:
+        validate_unique_phone(user["phone"])
+        validate_regex(user["phone"], PHONE_REGEX, PHONE_MALFORMED)
+    if "name" in user or is_create:
+        validate_length(user["name"], NAME_LENGTH)
+    if "last_name" in user or is_create:
+        validate_length(user["last_name"], LAST_NAME_LENGTH)
+    if "birth_date" in user or is_create:
+        validate_birth_date(user["birth_date"])
+    if "password" in user or is_create:
+        check_password(user["password"])
+
+
+def validate_login(data: dict):
+    if not re.match(EMAIL_REGEX, data["email"]):
+        raise ValueError(WRONG_EMAIL)
+
+    check_password(data["password"])
