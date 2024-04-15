@@ -3,7 +3,7 @@ from rest_framework import views
 from rest_framework import status
 
 # using to implements register and login logic
-from conf.firebase import auth
+from conf.firebase import auth, firestore
 
 # local imports
 from .models import create_user, create_role
@@ -55,3 +55,19 @@ class LoginView(views.APIView):
             return Response(data={'user': user, 'role': role}, status=status.HTTP_200_OK)
         except Exception as e:
             return Response({'message': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+
+class UserProfileView(views.APIView):
+    def get(self, request, user_id):
+        user_ref = firestore.document('users', user_id)
+        user_document = user_ref.get()
+        if user_document.exists:
+            user_data = user_document.to_dict()
+            user_data.pop('password', None)
+
+            role_document = user_ref.collection('role').get()[0]
+            role = role_document.to_dict()['name']
+            user_data['role'] = role
+            return Response(data=user_data, status=status.HTTP_200_OK)
+        else:
+            return Response({'message': 'User not found'}, status=status.HTTP_404_NOT_FOUND)
