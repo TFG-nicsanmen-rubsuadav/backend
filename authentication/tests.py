@@ -162,6 +162,6 @@ class UserProfileViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
 
     def test_invalid_user_profile(self):
-        response = self.client.get(f'/auth/profile/invalid_id/')
+        response = self.client.get('/auth/profile/invalid_id/')
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         self.assertEqual(response.data["message"], "User not found")
