@@ -154,3 +154,14 @@ class LoginViewTest(APITestCase):
         self.assertEqual(response2.status_code, status.HTTP_403_FORBIDDEN)
         self.assertEqual(response2.data["message"],
                          "Only admins can create users")
+
+
+class UserProfileViewTest(APITestCase):
+    def test_valid_user_profile(self):
+        response = self.client.get('/auth/profile/os1x1t7QpyKf00aa8NR9/')
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+    def test_invalid_user_profile(self):
+        response = self.client.get(f'/auth/profile/invalid_id/')
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.data["message"], "User not found")
