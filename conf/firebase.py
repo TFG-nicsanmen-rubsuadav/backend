@@ -1,8 +1,8 @@
 import pyrebase
 import firebase_admin
+import base64
 from firebase_admin import credentials, firestore as db
 import os
-import json
 from dotenv import load_dotenv
 
 load_dotenv()
@@ -28,12 +28,12 @@ auth = firebase.auth()
 # storage = firebase.storage()
 
 # Initialize Firebase only if it's not already initialized
-# Load the credentials from the file
-with open('credentials.json', 'r') as temp_file:
-    file = json.load(temp_file)
-
-# Use the credentials
-cred = credentials.Certificate(file)
+credentials_base64 = os.getenv(
+    'GOOGLE_APPLICATION_CREDENTIALS_BASE64')
+credentials_bytes = base64.b64decode(credentials_base64)
+with open('credentials.json', 'wb') as temp_file:
+    temp_file.write(credentials_bytes)
+cred = credentials.Certificate('credentials.json')
 
 if not firebase_admin._apps:
     app = firebase_admin.initialize_app(cred)
