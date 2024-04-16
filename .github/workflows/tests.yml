@@ -33,8 +33,8 @@ jobs:
 
       - name: Use environment variables
         run: |
-          echo $GOOGLE_APPLICATION_CREDENTIALS_BASE64 | base64 -d > google-credentials.json
-          export GOOGLE_APPLICATION_CREDENTIALS=google-credentials.json
+          echo $GOOGLE_APPLICATION_CREDENTIALS_BASE64 | base64 -d > credentials.json
+          export GOOGLE_APPLICATION_CREDENTIALS=credentials.json
           export FIREBASE_API_KEY
           export FIREBASE_AUTH_DOMAIN
           export FIREBASE_PROJECT_ID
