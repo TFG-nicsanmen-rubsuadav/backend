@@ -25,6 +25,9 @@ jobs:
 
           echo "EMAIL = '${{ secrets.EMAIL }}'" >> $GITHUB_ENV
           echo "PASSWORD = '${{ secrets.PASSWORD }}'" >> $GITHUB_ENV
+
+      - name: Print environment variable
+        run: echo $GOOGLE_APPLICATION_CREDENTIALS_BASE64
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
