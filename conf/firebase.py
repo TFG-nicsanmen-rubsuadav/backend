@@ -30,9 +30,9 @@ auth = firebase.auth()
 # Initialize Firebase only if it's not already initialized
 credentials_base64 = os.getenv(
     'GOOGLE_APPLICATION_CREDENTIALS_BASE64')
-print(credentials_base64)
+print(credentials_base64, os.getenv('FIREBASE_API_KEY'), os.getenv('FIREBASE_AUTH_DOMAIN'), os.getenv('FIREBASE_PROJECT_ID'),
+      os.getenv('FIREBASE_STORAGE_BUCKET'), os.getenv('FIREBASE_MESSAGING_SENDER_ID'), os.getenv('FIREBASE_APP_ID'))
 credentials_bytes = base64.b64decode(credentials_base64)
-print(credentials_bytes)
 with open('credentials.json', 'wb') as temp_file:
     temp_file.write(credentials_bytes)
 cred = credentials.Certificate('credentials.json')

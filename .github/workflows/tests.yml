@@ -26,12 +26,24 @@ jobs:
           echo "EMAIL = '${{ secrets.EMAIL }}'" >> $GITHUB_ENV
           echo "PASSWORD = '${{ secrets.PASSWORD }}'" >> $GITHUB_ENV
 
-      - name: Print environment variable
-        run: echo $GOOGLE_APPLICATION_CREDENTIALS_BASE64
       - name: Install dependencies
         run: |
           pip install -r requirements.txt
           pip install codacy-coverage
+
+      - name: Use environment variables
+        run: |
+          echo $GOOGLE_APPLICATION_CREDENTIALS_BASE64 | base64 -d > google-credentials.json
+          export GOOGLE_APPLICATION_CREDENTIALS=google-credentials.json
+          export FIREBASE_API_KEY
+          export FIREBASE_AUTH_DOMAIN
+          export FIREBASE_PROJECT_ID
+          export FIREBASE_STORAGE_BUCKET
+          export FIREBASE_MESSAGING_SENDER_ID
+          export FIREBASE_APP_ID
+          export EMAIL
+          export PASSWORD
+
       - name: Run tests
         run: |
           coverage run --branch --source=. ./manage.py test  --keepdb 
