@@ -25,7 +25,7 @@ firebase = pyrebase.initialize_app(config)
 auth = firebase.auth()
 
 # Initialize Firebase Storage
-storage = firebase.storage()
+# storage = firebase.storage()
 
 # Initialize Firebase only if it's not already initialized
 credentials_base64 = os.getenv(
