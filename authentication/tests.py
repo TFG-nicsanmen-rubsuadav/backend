@@ -1,16 +1,20 @@
 from rest_framework.test import APITestCase
 from rest_framework import status
 from parameterized import parameterized
+from dotenv import load_dotenv
+
 # external imports
 import json
 import requests
 import string
 import secrets
+import os
 
 # local imports
-from .utils import get_test_data, generate_phone_number
 from .constants import EMAIL_ALREADY_IN_USE, PHONE_ALREADY_IN_USE
-from local_settings import EMAIL, PASSWORD
+from .utils import get_test_data, generate_phone_number
+
+load_dotenv()
 
 
 def create_valid_user():
@@ -29,11 +33,12 @@ def create_valid_user():
     return name, last_name, mail, phone_number, password
 
 
+## UTILS TESTS METHODS ##########################################
 class BaseTest(APITestCase):
     def get_token_admin(self):
         response = self.client.post('/auth/login/', data=json.dumps({
-            "email": EMAIL,
-            "password": PASSWORD
+            "email": os.getenv('EMAIL'),
+            "password": os.getenv('PASSWORD')
         }), content_type='application/json')
         return response.data['user']['idToken']
 
@@ -45,6 +50,7 @@ class BaseTest(APITestCase):
         self.assertEqual(response.data["message"], expected_message)
 
 
+## ADMIN VIEWS ##########################################
 class CreateUsersAdminTest(BaseTest):
     @ parameterized.expand(get_test_data(status.HTTP_400_BAD_REQUEST))
     def test_invalid_data(self, _, data: dict, expected_status: int, expected_message: str):
@@ -82,6 +88,7 @@ class CreateUsersAdminTest(BaseTest):
                        "Token is missing", None)
 
 
+## USER VIEWS ##########################################
 class RegisterViewTest(APITestCase):
     def register_data(self, data: dict, expected_status: int, expected_message: str):
         response = self.client.post(
