@@ -10,6 +10,7 @@ import { getDataFromWebPage } from "./main/scrapping.js";
 import registerRouter from "./auth/routes/register.routes.js";
 import loginRoutes from "./auth/routes/login.routes.js";
 import profileRoutes from "./auth/routes/profile.routes.js";
+import createUserRoutes from "./auth/routes/createUser.routes.js";
 
 const app = express();
 
@@ -19,6 +20,7 @@ app.use(cors());
 app.use("/auth/", registerRouter);
 app.use("/auth/", loginRoutes);
 app.use("/auth/", profileRoutes);
+app.use("/auth/", createUserRoutes);
 
 app.use("/scrapping", async (req, res) => {
   const data = await getDataFromWebPage();
