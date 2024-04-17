@@ -26,6 +26,18 @@ export async function getUserDisplayNameByUid(uid) {
   }
 }
 
+export async function getUserRole(userRef) {
+  const roleCollectionRef = collection(userRef, "role");
+  const roleSnapshot = await getDocs(roleCollectionRef);
+
+  let roleName = "";
+  if (!roleSnapshot.empty) {
+    roleName = roleSnapshot.docs[0].data().name;
+  }
+
+  return roleName;
+}
+
 export async function populateRoles() {
   const rolesCollection = collection(FIREBASE_DB, "roles");
   const roles = ["admin", "owner", "customer", "authorized"];

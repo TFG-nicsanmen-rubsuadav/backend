@@ -9,6 +9,7 @@ import { FIREBASE_DB } from "../firebaseConfig.js";
 import { getDataFromWebPage } from "./main/scrapping.js";
 import registerRouter from "./auth/routes/register.routes.js";
 import loginRoutes from "./auth/routes/login.routes.js";
+import profileRoutes from "./auth/routes/profile.routes.js";
 
 const app = express();
 
@@ -17,6 +18,7 @@ app.use(express.json());
 app.use(cors());
 app.use("/auth/", registerRouter);
 app.use("/auth/", loginRoutes);
+app.use("/auth/", profileRoutes);
 
 app.use("/scrapping", async (req, res) => {
   const data = await getDataFromWebPage();
