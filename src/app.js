@@ -7,14 +7,16 @@ import { collection, addDoc } from "firebase/firestore";
 import "./config.js";
 import { FIREBASE_DB } from "../firebaseConfig.js";
 import { getDataFromWebPage } from "./main/scrapping.js";
+import registerRouter from "./auth/routes/register.routes.js";
 
 const app = express();
 
 app.use(morgan("dev"));
 app.use(express.json());
 app.use(cors());
+app.use("/auth/", registerRouter);
 
-app.use(async (req, res) => {
+app.use("/scrapping", async (req, res) => {
   const data = await getDataFromWebPage();
   await saveDataToFirebase(data);
   res.status(200).send(data);
