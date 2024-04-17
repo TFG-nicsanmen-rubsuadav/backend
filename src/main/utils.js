@@ -10,7 +10,7 @@ import {
 import { extractDataFromDetailsPage } from "./scrapping.js";
 
 export async function openWebPage(url) {
-  const browser = await puppeteer.launch({ headless: false });
+  const browser = await puppeteer.launch();
   const page = await browser.newPage();
   await page.goto(url);
   return { browser, page };

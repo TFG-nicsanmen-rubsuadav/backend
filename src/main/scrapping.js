@@ -187,6 +187,7 @@ function getRestaurantOpinions(NOT_AVAILABLE_FIELD) {
       .querySelector("div.ratingDate")
       .textContent.trim();
     comment["user"] = usersData.querySelector("span").textContent.trim();
+    // TODO: solve the problem with the rating
     comment["rating"] = parseFloat(
       usersData.querySelector("span.stars").textContent.trim().replace(",", ".")
     );
@@ -203,7 +204,7 @@ function getRestaurantOpinions(NOT_AVAILABLE_FIELD) {
     commentsList.push(comment);
   }
 
-  return JSON.stringify(commentsList);
+  return commentsList;
 }
 
 export async function extractDataFromDetailsPage(
@@ -289,6 +290,5 @@ export async function getDataFromWebPage() {
     await browser.close();
   }
 
-  // console.log(results);
   return results;
 }
