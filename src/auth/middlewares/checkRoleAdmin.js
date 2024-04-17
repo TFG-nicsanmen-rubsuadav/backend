@@ -1,4 +1,5 @@
 import { getIdTokenResult } from "firebase/auth";
+import { doc, getDoc } from "firebase/firestore";
 
 // local imports
 import { FIREBASE_AUTH, FIREBASE_DB } from "../../../firebaseConfig.js";
