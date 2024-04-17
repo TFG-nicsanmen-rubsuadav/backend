@@ -7,6 +7,16 @@ export function validate({
   birthDate,
 }) {
   const errors = {};
+  let isEmailValid = /^\w+([\.-]?\w+)*@(gmail|hotmail|outlook)\.com$/.test(
+    email
+  );
+  let isPhoneValid = /^(\\+34|0034|34)?[ -]*(6|7)[ -]*([0-9][ -]*){8}$/.test(
+    phone
+  );
+  let isBirthDateValid =
+    /^(0[1-9]|[12][0-9]|3[01])[/](0[1-9]|1[012])[/]\d{4}$/.test(birthDate);
+  let isPasswordValid = /(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/.test(password);
+
   switch (true) {
     case !name:
       errors.nameError = "El nombre es requerido";
@@ -23,7 +33,7 @@ export function validate({
     case !email:
       errors.emailError = "El correo electrónico es requerido";
       break;
-    case !/^\w+([\.-]?\w+)*@(gmail|hotmail|outlook)\.com$/.test(email):
+    case !isEmailValid:
       errors.emailError = "El correo electrónico es inválido";
       break;
     case !password:
@@ -32,14 +42,14 @@ export function validate({
     case password.length < 6:
       errors.passwordError = "La contraseña debe tener al menos 6 caracteres";
       break;
-    case !/(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*\W)/.test(password):
+    case !isPasswordValid:
       errors.passwordError =
         "La contraseña debe tener al menos una mayúscula, una minúscula, un número y un caracter especial";
       break;
     case !phone:
       errors.phoneError = "El teléfono es requerido";
       break;
-    case !/^(\\+34|0034|34)?[ -]*(6|7)[ -]*([0-9][ -]*){8}$/.test(phone):
+    case !isPhoneValid:
       errors.phoneError = "El teléfono es inválido";
       break;
     case !birthDate:
@@ -48,10 +58,7 @@ export function validate({
     case new Date(birthDate) > new Date():
       errors.birthDateError = "La fecha de nacimiento es inválida";
       break;
-    // regex expression dd/mm/yyyy
-    case !/^(0[1-9]|[12][0-9]|3[01])[/](0[1-9]|1[012])[/]\d{4}$/.test(
-      birthDate
-    ):
+    case !isBirthDateValid:
       errors.birthDateError = "La fecha de nacimiento es inválida";
       break;
     default:
