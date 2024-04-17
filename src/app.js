@@ -1,8 +1,12 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
+import { collection, addDoc } from "firebase/firestore";
+
+// local imports
 import "./config.js";
-import "../firebaseConfig.js";
+import { FIREBASE_DB } from "../firebaseConfig.js";
+import { getDataFromWebPage } from "./main/scrapping.js";
 
 const app = express();
 
@@ -10,8 +14,28 @@ app.use(morgan("dev"));
 app.use(express.json());
 app.use(cors());
 
-app.use((req, res) => {
-  res.status(404).json({ msg: "Not found" });
+app.use(async (req, res) => {
+  const data = await getDataFromWebPage();
+  await saveDataToFirebase(data);
+  res.status(200).send(data);
 });
+
+async function saveDataToFirebase(results) {
+  const resultsCollection = collection(FIREBASE_DB, "restaurants");
+
+  for (let result of results) {
+    try {
+      const { opinions, ...restaurantData } = result;
+      const restaurantDocRef = await addDoc(resultsCollection, restaurantData);
+
+      const opinionsCollection = collection(restaurantDocRef, "opinions");
+      for (let opinion of opinions) {
+        await addDoc(opinionsCollection, opinion);
+      }
+    } catch (e) {
+      console.error("Error adding document: ", e);
+    }
+  }
+}
 
 export default app;
