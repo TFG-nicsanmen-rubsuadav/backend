@@ -1,7 +1,7 @@
 // Firebase imports
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
-import { getFirestore } from "firebase/firestore";
+import { getAuth, connectAuthEmulator } from "firebase/auth";
+import { getFirestore, connectFirestoreEmulator } from "firebase/firestore";
 
 // External imports
 import { config } from "dotenv";
@@ -17,8 +17,13 @@ const firebaseConfig = {
   appId: process.env.FIREBASE_APP_ID,
 };
 
-
 // Initialize Firebase
 export const FIREBASE_APP = initializeApp(firebaseConfig);
 export const FIREBASE_AUTH = getAuth(FIREBASE_APP);
 export const FIREBASE_DB = getFirestore(FIREBASE_APP);
+
+// If we are in test mode, we connect to the emulators
+if (process.env.NODE_ENV === "test") {
+  connectFirestoreEmulator(FIREBASE_DB, "127.0.0.1", 8080);
+  connectAuthEmulator(FIREBASE_AUTH, "http://127.0.0.1:9099");
+}
