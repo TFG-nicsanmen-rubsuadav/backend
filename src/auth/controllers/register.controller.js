@@ -9,7 +9,10 @@ import { populateRoles, populateUser } from "../utils/utils.js";
 export const register = async (req, res) => {
   const { name, lastName, email, password, phone, birthDate } = req.body;
 
-  const val = validate({ name, lastName, email, password, phone, birthDate });
+  const val = validate(
+    { name, lastName, email, password, phone, birthDate },
+    true
+  );
   if (Object.keys(val).length > 0) {
     return res.status(400).send(val);
   }

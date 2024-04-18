@@ -15,7 +15,10 @@ export const createUser = async (req, res) => {
     return res.status(400).send({ rol: "Invalid role" });
   }
 
-  const val = validate({ name, lastName, email, password, phone, birthDate });
+  const val = validate(
+    { name, lastName, email, password, phone, birthDate },
+    true
+  );
   if (Object.keys(val).length > 0) {
     return res.status(400).send(val);
   }
