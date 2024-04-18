@@ -5,7 +5,7 @@ import bcrypt from "bcrypt";
 import { FIREBASE_DB } from "../../../firebaseConfig.js";
 import { validate } from "../validators/validations.js";
 
-export const editUserAsAdmin = async (req, res) => {
+export const editUser = async (req, res) => {
   const { name, lastName, email, password, phone, birthDate } = req.body;
 
   const val = validate(
