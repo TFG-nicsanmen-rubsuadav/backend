@@ -5,7 +5,15 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    container:
+      image: andreysenov/firebase-tools:latest
+    services:
+      firestore:
+        image: andreysenov/firebase-tools:latest
+        options: emulators:start --only firestore
+      auth:
+        image: andreysenov/firebase-tools:latest
+        options: emulators:start --only auth
     steps:
       - name: Checkout code
         uses: actions/checkout@main
