@@ -5,15 +5,6 @@ on: [push]
 jobs:
   build:
     runs-on: ubuntu-latest
-    container:
-      image: andreysenov/firebase-tools:latest
-    services:
-      firestore:
-        image: andreysenov/firebase-tools:latest
-        options: emulators:start --only firestore
-      auth:
-        image: andreysenov/firebase-tools:latest
-        options: emulators:start --only auth
     steps:
       - name: Checkout code
         uses: actions/checkout@main
@@ -35,6 +26,15 @@ jobs:
 
       - name: Install dependencies
         run: npm ci
+
+      - name: Install Firebase Tools
+        run: npm install -g firebase-tools
+
+      - name: Authenticate with Firebase
+        run: echo ${{ secrets.FIREBASE_TOKEN }} | firebase login --non-interactive
+
+      - name: Start Firebase emulators
+        run: firebase emulators:start &
 
       - name: Run tests with coverage
         run: npm run test
