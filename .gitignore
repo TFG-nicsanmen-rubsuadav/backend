@@ -3,6 +3,7 @@
 .env
 env
 venv
+credentials.json
 logs
 *.log
 npm-debug.log*
