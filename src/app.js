@@ -11,6 +11,7 @@ import registerRouter from "./auth/routes/register.routes.js";
 import loginRoutes from "./auth/routes/login.routes.js";
 import profileRoutes from "./auth/routes/profile.routes.js";
 import createUserRoutes from "./auth/routes/createUser.routes.js";
+import editUserRoutes from "./auth/routes/editUser.routes.js";
 
 const app = express();
 
@@ -21,6 +22,7 @@ app.use("/auth/", registerRouter);
 app.use("/auth/", loginRoutes);
 app.use("/auth/", profileRoutes);
 app.use("/auth/", createUserRoutes);
+app.use("/auth/", editUserRoutes);
 
 app.use("/scrapping", async (req, res) => {
   const data = await getDataFromWebPage();
