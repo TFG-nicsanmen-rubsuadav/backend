@@ -15,4 +15,13 @@ describe("Can login", () => {
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("token");
   });
+
+  it("should not login with invalid credentials", async () => {
+    const res = await request(app).post("/auth/login").send({
+      email: "prueba@gmail.com",
+      password: "prueba",
+    });
+    expect(res.statusCode).toEqual(400);
+    expect(res.body).toHaveProperty("email");
+  });
 });
