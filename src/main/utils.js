@@ -1,4 +1,6 @@
 import puppeteer from "puppeteer";
+import fs from "fs";
+import expressListEndpoints from "express-list-endpoints";
 
 //local imports
 import {
@@ -86,5 +88,29 @@ export class ReviewSite {
         this.score = 0.0;
       }
     }
+  }
+}
+
+export function createSwaggerDocument(app) {
+  let swagger = {
+    swagger: "2.0",
+    info: {
+      version: "1.0.0",
+      title: "API Endpoints",
+    },
+    paths: {},
+  };
+  const endpoints = expressListEndpoints(app);
+  endpoints.forEach((endpoint) => {
+    swagger.paths[endpoint.path] = {};
+    endpoint.methods.forEach((method) => {
+      swagger.paths[endpoint.path][method.toLowerCase()] = {
+        summary: "",
+        description: "",
+      };
+    });
+  });
+  if (!fs.existsSync("./swagger.json")) {
+    fs.writeFileSync("./swagger.json", JSON.stringify(swagger, null, 2));
   }
 }

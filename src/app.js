@@ -2,6 +2,8 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import { collection, addDoc } from "firebase/firestore";
+import swaggerUi from "swagger-ui-express";
+import fs from "fs";
 
 // local imports
 import "./config.js";
@@ -12,6 +14,7 @@ import loginRoutes from "./auth/routes/login.routes.js";
 import profileRoutes from "./auth/routes/profile.routes.js";
 import createUserRoutes from "./auth/routes/createUser.routes.js";
 import editUserRoutes from "./auth/routes/editUser.routes.js";
+import { createSwaggerDocument } from "./main/utils.js";
 
 const app = express();
 
@@ -29,6 +32,12 @@ app.use("/scrapping", async (req, res) => {
   await saveDataToFirebase(data);
   res.status(200).send(data);
 });
+
+createSwaggerDocument(app);
+app.use(
+  swaggerUi.serve,
+  swaggerUi.setup(JSON.parse(fs.readFileSync("./swagger.json", "utf8")))
+);
 
 async function saveDataToFirebase(results) {
   const resultsCollection = collection(FIREBASE_DB, "restaurants");
