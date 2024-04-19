@@ -55,6 +55,8 @@ describe("Controlling user creation with admin middleware throwing invalids toke
 describe("Tests cases with admin middleware", () => {
   beforeAll(async () => {
     const rolesIds = await populateRoles();
+    console.log(rolesIds);
+    console.log(uid);
 
     const userDoc = doc(FIREBASE_DB, "users", uid);
     const roleDoc = doc(userDoc, "role", rolesIds["admin"]);
