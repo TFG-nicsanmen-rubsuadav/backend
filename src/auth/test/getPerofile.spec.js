@@ -6,11 +6,13 @@ let uid;
 
 beforeAll(async () => {
   const response = await request(app).post("/auth/register").send(initialData);
+  console.log(response.body);
   uid = response.body.uid;
 });
 
 describe("Can get profile", () => {
   it("should get profile", async () => {
+    console.log(uid);
     const res = await request(app).get(`/auth/profile/${uid}`);
     expect(res.statusCode).toEqual(200);
     expect(res.body).toHaveProperty("displayName");
