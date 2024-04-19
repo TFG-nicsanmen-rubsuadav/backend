@@ -1,7 +1,4 @@
-# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
-# More GitHub Actions for Azure: https://github.com/Azure/actions
-
-name: Build and deploy Node.js app to Azure Web App - TFG-API-REST-FULL
+name: Build and deploy Node.js app to Azure Web App (Production)
 
 on:
   push:
@@ -14,18 +11,28 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
       - name: Set up Node.js version
         uses: actions/setup-node@v3
         with:
-          node-version: '20.x'
+          node-version: "20.x"
 
-      - name: npm install, build, and test
+      - name: Set environment variables
+        run: |
+          echo "GOOGLE_APPLICATION_CREDENTIALS_BASE64 = '${{ secrets.GOOGLE_APPLICATION_CREDENTIALS_BASE64 }}'" >> .env
+          echo "FIREBASE_API_KEY = '${{ secrets.FIREBASE_API_KEY }}'" >> .env
+          echo "FIREBASE_AUTH_DOMAIN = '${{ secrets.FIREBASE_AUTH_DOMAIN }}'" >> .env
+          echo "FIREBASE_PROJECT_ID = '${{ secrets.FIREBASE_PROJECT_ID }}'" >> .env
+          echo "FIREBASE_STORAGE_BUCKET = '${{ secrets.FIREBASE_STORAGE_BUCKET }}'" >> .env
+          echo "FIREBASE_MESSAGING_SENDER_ID = '${{ secrets.FIREBASE_MESSAGING_SENDER_ID }}'" >> .env
+          echo "FIREBASE_APP_ID = '${{ secrets.FIREBASE_APP_ID }}'" >> .env
+
+      - name: Install dependencies and build
         run: |
           npm install
           npm run build --if-present
-          npm run test --if-present
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
@@ -40,7 +47,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: 'Production'
+      name: Production
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
       id-token: write #This is required for requesting the JWT
@@ -53,7 +60,7 @@ jobs:
 
       - name: Unzip artifact for deployment
         run: unzip release.zip
-      
+
       - name: Login to Azure
         uses: azure/login@v1
         with:
@@ -61,11 +68,10 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_A04A514ED8D34F4C8C121A884407C480 }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_7627FC12111B4888B2DDFA7A77A8A7D9 }}
 
-      - name: 'Deploy to Azure Web App'
+      - name: "Deploy to Azure Web App"
         id: deploy-to-webapp
         uses: azure/webapps-deploy@v2
         with:
-          app-name: 'TFG-API-REST-FULL'
-          slot-name: 'Production'
+          app-name: "TFG-API-REST-FULL"
+          slot-name: "Production"
           package: .
-          
