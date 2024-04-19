@@ -39,17 +39,11 @@ export const register = async (req, res) => {
     await setDoc(roleDoc, { name: "customer" });
 
     const token = await user.getIdToken();
-    res.status(201).json({ token });
+    res.status(201).json({ token, uid: user.uid });
   } catch (error) {
     switch (error.code) {
       case "auth/email-already-in-use":
         res.status(400).json({ email: "Email already in use" });
-        break;
-      case "auth/invalid-email":
-        res.status(400).json({ email: "Invalid email" });
-        break;
-      case "auth/weak-password":
-        res.status(400).json({ password: "Weak password" });
         break;
     }
   }
