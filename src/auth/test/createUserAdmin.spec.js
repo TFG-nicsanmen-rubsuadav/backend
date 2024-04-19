@@ -53,16 +53,15 @@ describe("Controlling user creation with admin middleware throwing invalids toke
 });
 
 describe("Tests cases with admin middleware", () => {
-  beforeAll(async () => {
+  it("creating user", async () => {
     const rolesIds = await populateRoles();
     console.log(rolesIds);
-    console.log(uid);
+    console.log(rolesIds["admin"]);
 
     const userDoc = doc(FIREBASE_DB, "users", uid);
     const roleDoc = doc(userDoc, "role", rolesIds["admin"]);
     await setDoc(roleDoc, { name: "admin" });
-  });
-  it("creating user", async () => {
+
     const res = await request(app)
       .post("/auth/create")
       .set("Authorization", userToken)
@@ -80,6 +79,12 @@ describe("Tests cases with admin middleware", () => {
   });
 
   it("creating user with invalid role", async () => {
+    const rolesIds = await populateRoles();
+
+    const userDoc = doc(FIREBASE_DB, "users", uid);
+    const roleDoc = doc(userDoc, "role", rolesIds["admin"]);
+    await setDoc(roleDoc, { name: "admin" });
+
     const res = await request(app)
       .post("/auth/create")
       .set("Authorization", userToken)
