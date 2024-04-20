@@ -53,12 +53,6 @@ export const createUser = async (req, res) => {
       case "auth/email-already-in-use":
         res.status(400).json({ email: "Email already in use" });
         break;
-      case "auth/invalid-email":
-        res.status(400).json({ email: "Invalid email" });
-        break;
-      case "auth/weak-password":
-        res.status(400).json({ password: "Weak password" });
-        break;
     }
   }
 };

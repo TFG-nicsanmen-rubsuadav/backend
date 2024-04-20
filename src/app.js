@@ -2,6 +2,7 @@ import express from "express";
 import morgan from "morgan";
 import cors from "cors";
 import { collection, addDoc } from "firebase/firestore";
+import expressOasGenerator from "express-oas-generator";
 
 // local imports
 import "./config.js";
@@ -26,11 +27,18 @@ app.use("/auth/", createUserRoutes);
 app.use("/auth/", editUserRoutes);
 app.use("/auth/", deleteUserRoutes);
 
-app.use("/scrapping", async (req, res) => {
+app.get("/scrapping", async (req, res) => {
   const data = await getDataFromWebPage();
   await saveDataToFirebase(data);
   res.status(200).send(data);
 });
+
+app.get("/", (req, res) => {
+  res.redirect("/api-docs");
+});
+
+expressOasGenerator.handleResponses(app, {});
+expressOasGenerator.handleRequests();
 
 async function saveDataToFirebase(results) {
   const resultsCollection = collection(FIREBASE_DB, "restaurants");
