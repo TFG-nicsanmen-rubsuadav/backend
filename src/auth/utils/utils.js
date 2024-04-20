@@ -1,30 +1,8 @@
-import {
-  doc,
-  getDoc,
-  collection,
-  getDocs,
-  addDoc,
-  setDoc,
-} from "firebase/firestore";
+import { doc, collection, getDocs, addDoc, setDoc } from "firebase/firestore";
 import bcrypt from "bcrypt";
 
 // local imports
 import { FIREBASE_DB } from "../../../firebaseConfig.js";
-
-export async function getUserDisplayNameByUid(uid) {
-  const userRef = doc(FIREBASE_DB, "users", uid);
-  const docSnap = await getDoc(userRef);
-  switch (docSnap.exists()) {
-    case true: {
-      const name = docSnap.data().name;
-      const lastName = docSnap.data().lastName;
-      const displayName = `${name} ${lastName}`;
-      return displayName;
-    }
-    case false:
-      return null;
-  }
-}
 
 export async function getUserRole(userRef) {
   const roleCollectionRef = collection(userRef, "role");

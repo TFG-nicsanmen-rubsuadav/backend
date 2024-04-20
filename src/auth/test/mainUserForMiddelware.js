@@ -27,3 +27,43 @@ export const mainUser3 = {
   birthDate: "10/07/2012",
   rol: "customer",
 };
+
+export const mainUser4 = {
+  name: "Testdeed6",
+  lastName: "Usededgreef4",
+  email: "macarronesconqueso@gmail.com",
+  password: "@Passwodrd1234",
+  phone: "628074495",
+  birthDate: "10/07/2012",
+  rol: "customer",
+};
+
+export const mainUser5 = {
+  name: "test usuer 5",
+  lastName: "5 usuario de prueba",
+  email: "pruebaediccion@gmail.com",
+  password: "@Passwodrd1234",
+  phone: "699393667",
+  birthDate: "10/07/2012",
+  rol: "customer",
+};
+
+export const mainUser6 = {
+  name: "test usuer 6",
+  lastName: "6 usuario de prueba",
+  email: "pruebaediccionfinallllll@gmail.com",
+  password: "@Passwodrd1234",
+  phone: "630722167",
+  birthDate: "10/07/2012",
+  rol: "customer",
+};
+
+export const mainUser7 = {
+  name: "test usuer 7",
+  lastName: "7 usuario de prueba",
+  email: "pruebaediccionfMEGACHETADOFI@gmail.com",
+  password: "@Passwodrd1234",
+  phone: "630722117",
+  birthDate: "10/07/2012",
+  rol: "customer",
+};
