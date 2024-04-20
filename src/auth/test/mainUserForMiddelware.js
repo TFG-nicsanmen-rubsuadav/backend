@@ -1,9 +1,11 @@
+import { generatePhoneNumber, generateRandomEmail } from "./utils.js";
+
 export default {
   name: "Test4",
   lastName: "User4",
-  email: "usernew@outlook.com",
+  email: generateRandomEmail(),
   password: "@Password1234",
-  phone: "696010910",
+  phone: generatePhoneNumber(),
   birthDate: "10/07/2012",
   rol: "admin",
 };
@@ -11,9 +13,9 @@ export default {
 export const mainUser2 = {
   name: "Test5",
   lastName: "Usereef4",
-  email: "userdedenew@outlook.com",
+  email: generateRandomEmail(),
   password: "@Passwodrd1234",
-  phone: "696010920",
+  phone: generatePhoneNumber(),
   birthDate: "10/07/2012",
   rol: "admin",
 };
@@ -21,9 +23,9 @@ export const mainUser2 = {
 export const mainUser3 = {
   name: "Test6",
   lastName: "Usegreef4",
-  email: "userdedegnew@outlook.com",
+  email: generateRandomEmail(),
   password: "@Passwodrd1234",
-  phone: "696010930",
+  phone: generatePhoneNumber(),
   birthDate: "10/07/2012",
   rol: "customer",
 };
@@ -31,9 +33,9 @@ export const mainUser3 = {
 export const mainUser4 = {
   name: "Testdeed6",
   lastName: "Usededgreef4",
-  email: "josemarias@gmail.com",
+  email: generateRandomEmail(),
   password: "@Passwodrd1234",
-  phone: "628074191",
+  phone: generatePhoneNumber(),
   birthDate: "10/07/2012",
   rol: "customer",
 };
@@ -41,9 +43,9 @@ export const mainUser4 = {
 export const mainUser5 = {
   name: "test usuer 5",
   lastName: "5 usuario de prueba",
-  email: "rositaas@gmail.com",
+  email: generateRandomEmail(),
   password: "@Passwodrd1234",
-  phone: "699393177",
+  phone: generatePhoneNumber(),
   birthDate: "10/07/2012",
   rol: "customer",
 };
@@ -51,9 +53,9 @@ export const mainUser5 = {
 export const mainUser6 = {
   name: "test usuer 6",
   lastName: "6 usuario de prueba",
-  email: "maeriase@gmail.com",
+  email: generateRandomEmail(),
   password: "@Passwodrd1234",
-  phone: "630222101",
+  phone: generatePhoneNumber(),
   birthDate: "10/07/2012",
   rol: "customer",
 };
@@ -61,9 +63,9 @@ export const mainUser6 = {
 export const mainUser7 = {
   name: "test usuer 7",
   lastName: "7 usuario de prueba",
-  email: "rubenssss@gmail.com",
+  email: generateRandomEmail(),
   password: "@Passwodrd1234",
-  phone: "630725507",
+  phone: generatePhoneNumber(),
   birthDate: "10/07/2000",
   rol: "customer",
 };

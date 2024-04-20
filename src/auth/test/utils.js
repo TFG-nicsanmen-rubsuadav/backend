@@ -11,3 +11,12 @@ export function generatePhoneNumber() {
   }
   return phoneNumber;
 }
+
+export function generateRandomEmail() {
+  let randomName = "";
+  for (let i = 0; i < 10; i++) {
+    let randomChar = String.fromCharCode(randomInt(0, 26) + "a".charCodeAt(0));
+    randomName += randomChar;
+  }
+  return `${randomName}@gmail.com`;
+}
