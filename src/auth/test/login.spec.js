@@ -16,12 +16,28 @@ describe("Can login", () => {
     expect(res.body).toHaveProperty("token");
   });
 
-  it("should not login with invalid credentials", async () => {
+  it("should not login with missing email", async () => {
     const res = await request(app).post("/auth/login").send({
-      email: "prueba@gmail.com",
       password: "prueba",
     });
     expect(res.statusCode).toEqual(400);
-    expect(res.body).toHaveProperty("email");
+    expect(res.body.email).toEqual("Email is required");
+  });
+
+  it("should not login with missing password", async () => {
+    const res = await request(app).post("/auth/login").send({
+      email: "prueba@gmail.com",
+    });
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.password).toEqual("Password is required");
+  });
+
+  it("should not login with invalid email", async () => {
+    const res = await request(app).post("/auth/login").send({
+      email: "prueba",
+      password: "prueba",
+    });
+    expect(res.statusCode).toEqual(400);
+    expect(res.body.email).toEqual("Invalid email");
   });
 });
