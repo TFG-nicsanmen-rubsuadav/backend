@@ -22,6 +22,9 @@ export const login = async (req, res) => {
       case "auth/user-not-found":
         res.status(400).json({ email: "User not found" });
         break;
+      case "auth/invalid-credential":
+        res.status(400).json({ password: "Invalid credentials" });
+        break;
     }
   }
 };

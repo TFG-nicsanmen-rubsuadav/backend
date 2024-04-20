@@ -72,7 +72,6 @@ describe("Controlling user deletion with admin middleware throwing valid tokens"
   it("valid token and user found and deleted", async () => {
     const response2 = await request(app).post("/auth/register").send(mainUser3);
     const uid2 = response2.body.uid;
-    console.log(uid2);
     const rolesIds = await populateRoles();
     const userDoc = doc(FIREBASE_DB, "users", uid2);
     const roleDoc = doc(userDoc, "role", rolesIds["customer"]);
@@ -81,6 +80,5 @@ describe("Controlling user deletion with admin middleware throwing valid tokens"
       .delete(`/auth/delete/${uid2}`)
       .set("Authorization", userToken);
     expect(res.statusCode).toEqual(204);
-    expect(res.body).toHaveProperty("message");
   });
 });

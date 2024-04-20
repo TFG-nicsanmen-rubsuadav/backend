@@ -1,12 +1,4 @@
-import {
-  doc,
-  deleteDoc,
-  getDoc,
-  query,
-  where,
-  getDocs,
-  collection,
-} from "firebase/firestore";
+import { doc, deleteDoc, getDoc } from "firebase/firestore";
 
 //local imports
 import { FIREBASE_DB } from "../../../firebaseConfig.js";
@@ -21,7 +13,6 @@ export const deleteUser = async (req, res) => {
   }
 
   const userRole = await getUserRole(userRef);
-  console.log("userRole es: ", userRole);
   if (userRole === "admin") {
     res.status(401).send({ message: "You can't delete an admin account" });
   } else {
