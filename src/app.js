@@ -13,6 +13,7 @@ import loginRoutes from "./auth/routes/login.routes.js";
 import profileRoutes from "./auth/routes/profile.routes.js";
 import createUserRoutes from "./auth/routes/createUser.routes.js";
 import editUserRoutes from "./auth/routes/editUser.routes.js";
+import deleteUserRoutes from "./auth/routes/deleteUser.routes.js";
 
 const app = express();
 
@@ -24,6 +25,7 @@ app.use("/auth/", loginRoutes);
 app.use("/auth/", profileRoutes);
 app.use("/auth/", createUserRoutes);
 app.use("/auth/", editUserRoutes);
+app.use("/auth/", deleteUserRoutes);
 
 app.get("/scrapping", async (req, res) => {
   const data = await getDataFromWebPage();
