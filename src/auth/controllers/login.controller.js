@@ -2,11 +2,21 @@ import { signInWithEmailAndPassword } from "firebase/auth";
 
 // local imports
 import { FIREBASE_AUTH } from "../../../firebaseConfig.js";
+import {
+  checkOwnerActiveSubscription,
+  getUserRoleByEmail,
+} from "../utils/utils.js";
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
-
+  const userRole = await getUserRoleByEmail(email);
+  const activeSubscription = await checkOwnerActiveSubscription(email);
   try {
+    if (!activeSubscription && userRole === "owner") {
+      return res.status(400).json({
+        subscription: "You need an active subscription to login",
+      });
+    }
     const userCredential = await signInWithEmailAndPassword(
       FIREBASE_AUTH,
       email,

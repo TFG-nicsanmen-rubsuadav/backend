@@ -1,4 +1,13 @@
-import { doc, collection, getDocs, addDoc, setDoc } from "firebase/firestore";
+import {
+  doc,
+  collection,
+  getDocs,
+  addDoc,
+  setDoc,
+  onSnapshot,
+  where,
+  query,
+} from "firebase/firestore";
 import bcrypt from "bcrypt";
 
 // local imports
@@ -43,4 +52,85 @@ export async function populateUser(uid, user) {
     birthDate: user["birthDate"],
     passsword: await bcrypt.hash(user["password"], 10),
   });
+}
+
+async function createPaymentSession(user, req) {
+  const checkoutSessionsRef = collection(
+    FIREBASE_DB,
+    "users",
+    user.uid,
+    "checkout_sessions"
+  );
+  const docRef = await addDoc(checkoutSessionsRef, {
+    price: "price_1P8kwkA8KMaHM1rgyAdexqDP",
+    success_url: req.protocol + "://" + req.get("host"),
+    cancel_url: req.protocol + "://" + req.get("host"),
+  });
+
+  return new Promise((resolve, reject) => {
+    onSnapshot(docRef, (snap) => {
+      if (snap.exists()) {
+        const { error, url } = snap.data();
+        if (error) {
+          reject(error.message);
+        }
+        if (url) {
+          resolve({ sessionId: url });
+        }
+      } else {
+        reject("No data available");
+      }
+    });
+  });
+}
+
+export async function getCheckoutSession(user, req) {
+  try {
+    const url = await createPaymentSession(user, req);
+    return url;
+  } catch (error) {
+    return error;
+  }
+}
+
+export async function getUserRoleByEmail(email) {
+  const usersRef = collection(FIREBASE_DB, 'users');
+  const q = query(usersRef, where('email', '==', email));
+  const querySnapshot = await getDocs(q);
+  if (!querySnapshot.empty) {
+    const user = querySnapshot.docs[0];
+    const roleRef = collection(doc(FIREBASE_DB, 'users', user.id), 'role');
+    const roleSnapshot = await getDocs(roleRef);
+    if (!roleSnapshot.empty) {
+      const roleName = roleSnapshot.docs[0].data().name;
+      return roleName;
+    } else {
+      console.log('No se encontró el rol para el usuario con el correo electrónico proporcionado');
+      return null;
+    }
+  } else {
+    console.log('No se encontró el usuario con el correo electrónico proporcionado');
+    return null;
+  }
+}
+
+export async function getUserIdByEmail(email) {
+  const collectionRef = collection(FIREBASE_DB, "users");
+  const q = query(collectionRef, where("email", "==", email));
+  const querySnapshot = await getDocs(q);
+  return querySnapshot.docs[0].ref.id;
+}
+
+export async function checkOwnerActiveSubscription(email) {
+  const userCollection = await getUserIdByEmail(email);
+  const subscriptionCollectionRef = collection(FIREBASE_DB, "users", userCollection, "subscriptions");
+  const subscriptionSnapshot = await getDocs(subscriptionCollectionRef);
+
+  let active = false;
+  if (!subscriptionSnapshot.empty) {
+    active = subscriptionSnapshot.docs[0].data().status;
+  }
+
+
+  return active;
 }
