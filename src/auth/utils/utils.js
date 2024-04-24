@@ -94,23 +94,19 @@ export async function getCheckoutSession(user, req) {
 }
 
 export async function getUserRoleByEmail(email) {
-  const usersRef = collection(FIREBASE_DB, 'users');
-  const q = query(usersRef, where('email', '==', email));
+  const usersRef = collection(FIREBASE_DB, "users");
+  const q = query(usersRef, where("email", "==", email));
   const querySnapshot = await getDocs(q);
   if (!querySnapshot.empty) {
     const user = querySnapshot.docs[0];
-    const roleRef = collection(doc(FIREBASE_DB, 'users', user.id), 'role');
+    const roleRef = collection(doc(FIREBASE_DB, "users", user.id), "role");
     const roleSnapshot = await getDocs(roleRef);
     if (!roleSnapshot.empty) {
       const roleName = roleSnapshot.docs[0].data().name;
       return roleName;
-    } else {
-      console.log('No se encontró el rol para el usuario con el correo electrónico proporcionado');
-      return null;
     }
   } else {
-    console.log('No se encontró el usuario con el correo electrónico proporcionado');
-    return null;
+    throw new Error("User not found");
   }
 }
 
@@ -123,14 +119,18 @@ export async function getUserIdByEmail(email) {
 
 export async function checkOwnerActiveSubscription(email) {
   const userCollection = await getUserIdByEmail(email);
-  const subscriptionCollectionRef = collection(FIREBASE_DB, "users", userCollection, "subscriptions");
+  const subscriptionCollectionRef = collection(
+    FIREBASE_DB,
+    "users",
+    userCollection,
+    "subscriptions"
+  );
   const subscriptionSnapshot = await getDocs(subscriptionCollectionRef);
 
   let active = false;
   if (!subscriptionSnapshot.empty) {
     active = subscriptionSnapshot.docs[0].data().status;
   }
-
 
   return active;
 }
