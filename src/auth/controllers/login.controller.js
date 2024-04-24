@@ -50,7 +50,7 @@ export const login = async (req, res) => {
     );
 
     const token = await userCredential.user.getIdToken();
-    res.status(200).json({ token });
+    res.status(200).json({ token, userRole});
   } catch (error) {
     handleLoginError(error, res);
   }

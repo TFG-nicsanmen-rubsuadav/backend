@@ -55,10 +55,10 @@ export const register = async (req, res) => {
 
     if (rol === "owner") {
       const { sessionId } = await getCheckoutSession(user, req);
-      return res.status(201).json({ token, uid: user.uid, sessionId });
+      return res.status(201).json({ token, uid: user.uid, sessionId, rol });
     }
 
-    res.status(201).json({ token, uid: user.uid });
+    res.status(201).json({ token, uid: user.uid, rol });
   } catch (error) {
     switch (error.code) {
       case "auth/email-already-in-use":
