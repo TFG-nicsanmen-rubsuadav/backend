@@ -1,31 +1,32 @@
 import request from "supertest";
-import { signInWithCustomToken } from "firebase/auth";
-import admin from "firebase-admin";
 import { doc, setDoc } from "firebase/firestore";
 
 // local imports
 import app from "../../app";
-import { FIREBASE_AUTH, FIREBASE_DB } from "../../../firebaseConfig.js";
+import { FIREBASE_DB } from "../../../firebaseConfig.js";
 import {
   mainUser4,
   mainUser5,
   mainUser6,
   mainUser7,
+  mainUser9,
 } from "./mainUserForMiddelware.js";
+import { authenticateUser } from "./utils.js";
 import { populateRoles } from "../utils/utils.js";
 
 let uid;
+let uid2;
 let userToken;
+let adminToken;
 
 beforeAll(async () => {
-  const response = await request(app).post("/auth/register").send(mainUser4);
-  uid = response.body.uid;
-  const customToken = await admin.auth().createCustomToken(uid);
-  const userCredentials = await signInWithCustomToken(
-    FIREBASE_AUTH,
-    customToken
-  );
-  userToken = await userCredentials.user.getIdToken();
+  const adminAuth = await authenticateUser(mainUser9, app);
+  uid = adminAuth.uid;
+  adminToken = adminAuth.idToken;
+
+  const userAuth = await authenticateUser(mainUser4, app);
+  uid2 = userAuth.uid;
+  userToken = userAuth.idToken;
 });
 
 describe("Controlling user update with admin middleware throwing invalids tokens", () => {
@@ -52,18 +53,20 @@ describe("Controlling user update with admin middleware throwing invalids tokens
 
 describe("Controlling user update with admin middleware throwing valid tokens", () => {
   it("valid token but user not found", async () => {
+    //fail
     const rolesIds = await populateRoles();
     const userDoc = doc(FIREBASE_DB, "users", uid);
     const roleDoc = doc(userDoc, "role", rolesIds["admin"]);
     await setDoc(roleDoc, { name: "admin" });
     const res = await request(app)
       .patch(`/auth/editUser/invalidUid`)
-      .set("Authorization", userToken);
+      .set("Authorization", adminToken);
     expect(res.statusCode).toEqual(404);
     expect(res.body).toHaveProperty("message");
   });
 
   it("valid token and user found and updated unnsuccesfully cause bad data", async () => {
+    //fail
     const response2 = await request(app).post("/auth/register").send(mainUser5);
     const uid2 = response2.body.uid;
     const rolesIds = await populateRoles();
@@ -72,13 +75,14 @@ describe("Controlling user update with admin middleware throwing valid tokens", 
     await setDoc(roleDoc, { name: "customer" });
     const res = await request(app)
       .patch(`/auth/editUser/${uid2}`)
-      .set("Authorization", userToken)
+      .set("Authorization", adminToken)
       .send({ name: "d" });
     expect(res.statusCode).toEqual(400);
     expect(res.body).toHaveProperty("nameError");
   });
 
   it("valid token and user found and updated successfully", async () => {
+    //fail
     const response2 = await request(app).post("/auth/register").send(mainUser6);
     const uid2 = response2.body.uid;
     const rolesIds = await populateRoles();
@@ -87,7 +91,7 @@ describe("Controlling user update with admin middleware throwing valid tokens", 
     await setDoc(roleDoc, { name: "customer" });
     const res = await request(app)
       .patch(`/auth/editUser/${uid2}`)
-      .set("Authorization", userToken)
+      .set("Authorization", adminToken)
       .send({
         name: "nuevos macarrones",
         lastName: "con queso",
