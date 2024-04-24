@@ -9,11 +9,13 @@ import {
 
 const validateLoginData = (email, password, res) => {
   if (!email || !password) {
-    return res.status(400).json({
+    res.status(400).json({
       email: "Email is required",
       password: "Password is required",
     });
+    return false;
   }
+  return true;
 };
 
 const handleLoginError = (error, res) => {
@@ -31,7 +33,7 @@ const handleLoginError = (error, res) => {
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
-  validateLoginData(email, password, res);
+  if (!validateLoginData(email, password, res)) return;
   try {
     const userRole = await getUserRoleByEmail(email);
     const activeSubscription = await checkOwnerActiveSubscription(email);
