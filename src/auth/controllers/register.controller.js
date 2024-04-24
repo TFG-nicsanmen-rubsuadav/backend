@@ -10,7 +10,7 @@ import {
   getCheckoutSession,
 } from "../utils/utils.js";
 
-const roles = ["owner", "customer"];
+const roles = ["owner", "customer", "admin"];
 
 export const register = async (req, res) => {
   const { name, lastName, email, password, phone, birthDate, rol } = req.body;

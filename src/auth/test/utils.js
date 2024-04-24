@@ -1,4 +1,10 @@
+import request from "supertest";
 import { randomInt } from "crypto";
+import { signInWithCustomToken } from "firebase/auth";
+import admin from "firebase-admin";
+
+// local imports
+import { FIREBASE_AUTH } from "../../../firebaseConfig.js";
 
 export function generatePhoneNumber() {
   let phoneNumber = "";
@@ -19,4 +25,18 @@ export function generateRandomEmail() {
     randomName += randomChar;
   }
   return `${randomName}@gmail.com`;
+}
+
+export async function authenticateUser(user, app) {
+  const response = await request(app).post("/auth/register").send(user);
+  const uid = response.body.uid;
+  const customToken = await admin.auth().createCustomToken(uid);
+  const userCredentials = await signInWithCustomToken(
+    FIREBASE_AUTH,
+    customToken
+  );
+  return {
+    uid: uid,
+    idToken: await userCredentials.user.getIdToken(),
+  };
 }

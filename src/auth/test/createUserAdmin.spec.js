@@ -1,26 +1,26 @@
 import request from "supertest";
-import { signInWithCustomToken } from "firebase/auth";
-import admin from "firebase-admin";
 import { doc, setDoc } from "firebase/firestore";
 
 // local imports
 import app from "../../app";
-import { FIREBASE_AUTH, FIREBASE_DB } from "../../../firebaseConfig.js";
-import mainUser from "./mainUserForMiddelware.js";
+import { FIREBASE_DB } from "../../../firebaseConfig.js";
+import { authenticateUser } from "./utils.js";
+import mainUser, { mainUser8 } from "./mainUserForMiddelware.js";
 import { populateRoles } from "../utils/utils.js";
 
 let uid;
+let uid2;
+let adminToken;
 let userToken;
 
 beforeAll(async () => {
-  const response = await request(app).post("/auth/register").send(mainUser);
-  uid = response.body.uid;
-  const customToken = await admin.auth().createCustomToken(uid);
-  const userCredentials = await signInWithCustomToken(
-    FIREBASE_AUTH,
-    customToken
-  );
-  userToken = await userCredentials.user.getIdToken();
+  const adminAuth = await authenticateUser(mainUser, app);
+  uid = adminAuth.uid;
+  adminToken = adminAuth.idToken;
+
+  const userAuth = await authenticateUser(mainUser8, app);
+  uid2 = userAuth.uid;
+  userToken = userAuth.idToken;
 });
 
 describe("Controlling user creation with admin middleware throwing invalids tokens", () => {
@@ -46,7 +46,15 @@ describe("Controlling user creation with admin middleware throwing invalids toke
     const res = await request(app)
       .post("/auth/create")
       .set("Authorization", userToken)
-      .send(mainUser);
+      .send({
+        name: "rfrgr",
+        lastName: "rfgrg",
+        email: "emailrandom@gmail.com",
+        password: "@Password1234",
+        phone: "696010910",
+        birthDate: "10/07/2012",
+        rol: "admin",
+      });
     expect(res.statusCode).toEqual(403);
     expect(res.body).toHaveProperty("error");
   });
@@ -62,7 +70,7 @@ describe("Tests cases with admin middleware", () => {
 
     const res = await request(app)
       .post("/auth/create")
-      .set("Authorization", userToken)
+      .set("Authorization", adminToken)
       .send({
         name: "Test14",
         lastName: "User24",
@@ -85,7 +93,7 @@ describe("Tests cases with admin middleware", () => {
 
     const res = await request(app)
       .post("/auth/create")
-      .set("Authorization", userToken)
+      .set("Authorization", adminToken)
       .send({ ...mainUser, rol: "invalid" });
     expect(res.statusCode).toEqual(400);
     expect(res.body).toHaveProperty("rol");
