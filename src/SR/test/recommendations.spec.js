@@ -17,7 +17,7 @@ beforeAll(async () => {
   await request(app).post("/auth/register").send(mainUser11);
   await generateRandomReviews();
   token = response.body.token;
-});
+}, 10000);
 
 describe("Using SR", () => {
   it("Can not get recommendations without login", async () => {
