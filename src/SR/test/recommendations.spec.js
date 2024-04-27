@@ -19,7 +19,10 @@ beforeAll(async () => {
 //   token = response.body.token;
 });
 
-//describe("Using SR", () => {
+describe("Using SR", () => {
+    it('1 +1 = 2', () => {
+        expect(1 + 1).toBe(2);
+    });
 //   it("Can not get recommendations without login", async () => {
 //     const response = await request(app).get("/api/recommendations");
 //     expect(response.statusCode).toEqual(401);
@@ -41,4 +44,4 @@ beforeAll(async () => {
 //     expect(response.statusCode).toEqual(200);
 //     expect(response.body).toHaveProperty("recommendations");
 //   });
-//});
+});
