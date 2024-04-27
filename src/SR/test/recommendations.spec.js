@@ -12,7 +12,7 @@ import restaurantData from "./initialRestaurantData.js";
 
 let token;
 
-beforeAll(async () => {
+beforeEach(async () => {
   await saveDataToFirebase(restaurantData);
   const auth = await authenticateUser(mainUser10, app);
   await authenticateUser(mainUser11, app);
