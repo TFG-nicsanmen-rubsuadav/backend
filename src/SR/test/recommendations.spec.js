@@ -15,6 +15,7 @@ let token;
 beforeEach(async () => {
   await saveDataToFirebase(restaurantData);
   const auth = await authenticateUser(mainUser10, app);
+  console.log("auth", auth);
   await authenticateUser(mainUser11, app);
   await generateRandomReviews();
   token = auth.idToken;
