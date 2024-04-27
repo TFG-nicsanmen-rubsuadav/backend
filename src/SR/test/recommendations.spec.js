@@ -2,7 +2,6 @@ import request from "supertest";
 
 // local imports
 import app, { saveDataToFirebase } from "../../app";
-import { authenticateUser } from "../../auth/test/utils.js";
 import { generateRandomReviews } from "../utils/utils.js";
 import {
   mainUser10,
@@ -12,13 +11,12 @@ import restaurantData from "./initialRestaurantData.js";
 
 let token;
 
-beforeEach(async () => {
+beforeAll(async () => {
   await saveDataToFirebase(restaurantData);
-  const auth = await authenticateUser(mainUser10, app);
-  console.log("auth", auth);
-  await authenticateUser(mainUser11, app);
+  const response = await request(app).post("/auth/register").send(mainUser10);
+  await request(app).post("/auth/register").send(mainUser11);
   await generateRandomReviews();
-  token = auth.idToken;
+  token = response.body.token;
 });
 
 describe("Using SR", () => {
