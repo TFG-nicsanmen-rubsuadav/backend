@@ -44,22 +44,6 @@ const restaurantNames = [
   "El Sazón Casero",
   "La Cuchara de Plata",
   "El Gourmet Francés",
-  "La Cocina Rápida",
-  "El Sabor Italiano",
-  "La Parrilla Argentina",
-  "El Sushi Volador",
-  "La Ensalada Fresca",
-  "El Wok Chino",
-  "La Pasta Suave",
-  "El Taco Picante",
-  "La Pizza Caliente",
-  "El Pollo Asado",
-  "La Hamburguesa Jugosa",
-  "El Pescado Fresco",
-  "La Ensalada Mixta",
-  "El Sabor de la India",
-  "La Cocina Mediterránea",
-  "El Sabor del Caribe",
 ];
 
 const prices = [20, 25, 30, 80, 15, 10, 40, 50];
@@ -87,7 +71,7 @@ const reviews = [
 
 const sites = ["Google", "TripAdvisor", "TheFork"];
 
-export default Array.from({ length: 40 }, (_, i) => ({
+export default Array.from({ length: 24 }, (_, i) => ({
   delivery: getRandomBoolean(),
   fullAddress: `Calle Falsa ${randomInt(1, 101)}, Ciudad ${i}`,
   googleNumberOpinions: getRandomNumberOpinions(),
