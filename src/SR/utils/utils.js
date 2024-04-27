@@ -54,7 +54,7 @@ export async function generateRandomReviews() {
 
   for (let user of users) {
     let selectedRestaurants = [];
-    for (let i = 0; i < 12; i++) {
+    for (let i = 0; i < 4; i++) {
       let restaurant;
       do {
         restaurant = restaurants[randomInt(restaurants.length)];
