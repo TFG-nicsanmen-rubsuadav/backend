@@ -1,12 +1,13 @@
 import { collection, getDocs, addDoc, query, where } from "firebase/firestore";
 import moment from "moment";
+import { randomInt } from "crypto";
 
 // local imports
 import { FIREBASE_DB } from "../../../firebaseConfig.js";
 
 function getRandomizeSite() {
   const sites = ["Google", "Tripadvisor"];
-  return sites[Math.floor(Math.random() * sites.length)];
+  return sites[randomInt(sites.length)];
 }
 
 async function saveOpinionToRestaurant(restaurantId, review) {
@@ -56,8 +57,7 @@ export async function generateRandomReviews() {
     for (let i = 0; i < 12; i++) {
       let restaurant;
       do {
-        restaurant =
-          restaurants[Math.floor(Math.random() * restaurants.length)];
+        restaurant = restaurants[randomInt(restaurants.length)];
       } while (
         selectedRestaurants.includes(restaurant.id) ||
         (await userHasRatedRestaurant(
@@ -69,7 +69,7 @@ export async function generateRandomReviews() {
       selectedRestaurants.push(restaurant.id);
 
       const review = {
-        rating: Math.floor(Math.random() * 5) + 1,
+        rating: randomInt(5) + 1,
         review: "Esta es una opinión generada aleatoriamente.",
         date: moment(new Date()).locale("es").format("DD MMMM YYYY"),
         user: user.name + " " + user.lastName,

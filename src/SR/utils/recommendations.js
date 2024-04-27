@@ -1,5 +1,6 @@
 import { collection, getDocs, query, where } from "firebase/firestore";
 import { cosineSimilarity } from "cosine-similarity-threshold";
+import { randomInt } from "crypto";
 
 // local imports
 import { getRestaurants } from "./utils.js";
@@ -112,7 +113,7 @@ export async function recommendRestaurants(userDisplayName) {
 
   // Ordenamos los restaurantes por similitud
   for (let i = similarities.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * i);
+    const j = randomInt(i + 1);
     const temp = similarities[i];
     similarities[i] = similarities[j];
     similarities[j] = temp;
