@@ -11,7 +11,7 @@ let token;
 beforeAll(async () => {
   await saveDataToFirebase(restaurantData);
   const response = await request(app).post("/auth/register").send(mainUser10);
-  //   await generateRandomReviews();
+  await generateRandomReviews();
   token = response.body.token;
 });
 
@@ -28,11 +28,11 @@ describe("Using SR", () => {
     expect(response.statusCode).toEqual(403);
     expect(response.body.message).toEqual("Invalid login token");
   });
-  //   it("Can get recommendations", async () => {
-  //     const response = await request(app)
-  //       .get("/api/recommendations")
-  //       .set("Authorization", token);
-  //     expect(response.statusCode).toEqual(200);
-  //     expect(response.body).toHaveProperty("recommendations");
-  //   });
+    it("Can get recommendations", async () => {
+      const response = await request(app)
+        .get("/api/recommendations")
+        .set("Authorization", token);
+      expect(response.statusCode).toEqual(200);
+      expect(response.body).toHaveProperty("recommendations");
+    });
 });
