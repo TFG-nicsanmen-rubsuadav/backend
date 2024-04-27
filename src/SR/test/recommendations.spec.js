@@ -4,15 +4,18 @@ import request from "supertest";
 import app, { saveDataToFirebase } from "../../app";
 import { authenticateUser } from "../../auth/test/utils.js";
 import { generateRandomReviews } from "../utils/utils.js";
-import mainUser, { mainUser2 } from "../../auth/test/mainUserForMiddelware.js";
+import {
+  mainUser10,
+  mainUser11,
+} from "../../auth/test/mainUserForMiddelware.js";
 import restaurantData from "./initialRestaurantData.js";
 
 let token;
 
 beforeAll(async () => {
   await saveDataToFirebase(restaurantData);
-  const auth = await authenticateUser(mainUser, app);
-  await authenticateUser(mainUser2, app);
+  const auth = await authenticateUser(mainUser10, app);
+  await authenticateUser(mainUser11, app);
   await generateRandomReviews();
   token = auth.idToken;
 });

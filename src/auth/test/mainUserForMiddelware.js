@@ -89,3 +89,23 @@ export const mainUser9 = {
   birthDate: "10/07/2012",
   rol: "admin",
 };
+
+export const mainUser10 = {
+  name: "Test4",
+  lastName: "User4",
+  email: generateRandomEmail(),
+  password: "@Password1234",
+  phone: generatePhoneNumber(),
+  birthDate: "10/07/2012",
+  rol: "admin",
+};
+
+export const mainUser11 = {
+  name: "Test4",
+  lastName: "User4",
+  email: generateRandomEmail(),
+  password: "@Password1234",
+  phone: generatePhoneNumber(),
+  birthDate: "10/07/2012",
+  rol: "admin",
+};
