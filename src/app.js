@@ -42,7 +42,7 @@ app.get("/", (req, res) => {
 expressOasGenerator.handleResponses(app, {});
 expressOasGenerator.handleRequests();
 
-async function saveDataToFirebase(results) {
+export async function saveDataToFirebase(results) {
   const resultsCollection = collection(FIREBASE_DB, "restaurants");
 
   for (let result of results) {
