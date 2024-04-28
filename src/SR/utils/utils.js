@@ -57,16 +57,19 @@ export async function generateRandomReviews(userDisplayName) {
     if (userHasRated) break;
 
     let restaurant;
-    do {
+    let found = false;
+    while (!found) {
       restaurant = restaurants[randomInt(restaurants.length)];
       if (
-        selectedRestaurants.includes(restaurant.id) ||
-        (await userHasRatedRestaurant(userDisplayName, restaurant.id))
+        !selectedRestaurants.includes(restaurant.id) &&
+        !(await userHasRatedRestaurant(userDisplayName, restaurant.id))
       ) {
+        found = true;
+      } else {
         userHasRated = true;
         break;
       }
-    } while (false);
+    }
 
     if (userHasRated) break;
 
@@ -79,6 +82,8 @@ export async function generateRandomReviews(userDisplayName) {
       user: userDisplayName,
       site: getRandomizeSite(),
     };
+
+    console.log(`Saving review for restaurant ${restaurant.id}`);
 
     await saveOpinionToRestaurant(restaurant.id, review);
   }
