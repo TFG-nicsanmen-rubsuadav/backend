@@ -48,36 +48,39 @@ async function userHasRatedRestaurant(userId, restaurantId) {
   return !userOpinionsSnapshot.empty;
 }
 
-export async function generateRandomReviews() {
-  const users = await getUsers();
+export async function generateRandomReviews(userDisplayName) {
   const restaurants = await getRestaurants();
 
-  for (let user of users) {
-    let selectedRestaurants = [];
-    for (let i = 0; i < 4; i++) {
-      let restaurant;
-      do {
-        restaurant = restaurants[randomInt(restaurants.length)];
-      } while (
+  let selectedRestaurants = [];
+  let userHasRated = false;
+  for (let i = 0; i < 12; i++) {
+    if (userHasRated) break;
+
+    let restaurant;
+    do {
+      restaurant = restaurants[randomInt(restaurants.length)];
+      if (
         selectedRestaurants.includes(restaurant.id) ||
-        (await userHasRatedRestaurant(
-          user.name + " " + user.lastName,
-          restaurant.id
-        ))
-      );
+        (await userHasRatedRestaurant(userDisplayName, restaurant.id))
+      ) {
+        userHasRated = true;
+        break;
+      }
+    } while (false);
 
-      selectedRestaurants.push(restaurant.id);
+    if (userHasRated) break;
 
-      const review = {
-        rating: randomInt(5) + 1,
-        review: "Esta es una opinión generada aleatoriamente.",
-        date: moment(new Date()).locale("es").format("DD MMMM YYYY"),
-        user: user.name + " " + user.lastName,
-        site: getRandomizeSite(),
-      };
+    selectedRestaurants.push(restaurant.id);
 
-      await saveOpinionToRestaurant(restaurant.id, review);
-    }
+    const review = {
+      rating: randomInt(5) + 1,
+      review: "Esta es una opinión generada aleatoriamente.",
+      date: moment(new Date()).locale("es").format("DD MMMM YYYY"),
+      user: userDisplayName,
+      site: getRandomizeSite(),
+    };
+
+    await saveOpinionToRestaurant(restaurant.id, review);
   }
 }
 
