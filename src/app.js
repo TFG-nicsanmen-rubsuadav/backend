@@ -15,6 +15,7 @@ import createUserRoutes from "./auth/routes/createUser.routes.js";
 import editUserRoutes from "./auth/routes/editUser.routes.js";
 import deleteUserRoutes from "./auth/routes/deleteUser.routes.js";
 import recommendationRoutes from "./SR/routes/recommendations.routes.js";
+import menuRoutes from "./menu/routes/menu.routes.js";
 
 const app = express();
 
@@ -28,6 +29,7 @@ app.use("/auth/", createUserRoutes);
 app.use("/auth/", editUserRoutes);
 app.use("/auth/", deleteUserRoutes);
 app.use("/api/", recommendationRoutes);
+app.use("/api/", menuRoutes);
 
 app.get("/scrapping", async (req, res) => {
   const data = await getDataFromWebPage();
