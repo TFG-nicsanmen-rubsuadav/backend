@@ -11,7 +11,7 @@ beforeEach(async () => {
 });
 
 describe("Can register user", () => {
-  it("should create a new user and return a token", async () => {
+  it("should create a new user with role customer and return a token", async () => {
     const res = await request(app).post("/auth/register").send({
       name: "Usuario1",
       lastName: "Test",
@@ -19,6 +19,7 @@ describe("Can register user", () => {
       password: "@Password1234",
       phone: generatePhoneNumber(),
       birthDate: "10/07/1998",
+      rol: "customer",
     });
 
     expect(res.statusCode).toEqual(201);

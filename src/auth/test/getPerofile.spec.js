@@ -11,6 +11,7 @@ beforeAll(async () => {
     password: "@Password1234",
     phone: "696981167",
     birthDate: "10/07/1998",
+    rol: "customer",
   });
   uid = response.body.uid;
 });
