@@ -41,7 +41,9 @@ app.get("/", (req, res) => {
   res.redirect("/api-docs");
 });
 
-expressOasGenerator.handleResponses(app, {});
+expressOasGenerator.handleResponses(app, {
+  tags: ["Recommendations", "Menu", "Auth", "Scrapping"],
+});
 expressOasGenerator.handleRequests();
 
 export async function saveDataToFirebase(results) {
