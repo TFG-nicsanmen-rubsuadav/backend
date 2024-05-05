@@ -47,3 +47,37 @@ export async function getMenuSectionById(restaurantId, menuId, sectionId) {
   );
   return sectionSnapshot.data();
 }
+
+// MENU DISH METHODS //
+export async function getRestaurantMenuDish(restaurantId, menuId, sectionId) {
+  const dishSnapshot = await getDocs(
+    collection(
+      FIREBASE_DB,
+      "restaurants",
+      restaurantId,
+      "menu",
+      menuId,
+      "section",
+      sectionId,
+      "dish"
+    )
+  );
+  return dishSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+}
+
+export async function getMenuDishById(restaurantId, menuId, sectionId, dishId) {
+  const dishSnapshot = await getDoc(
+    doc(
+      FIREBASE_DB,
+      "restaurants",
+      restaurantId,
+      "menu",
+      menuId,
+      "section",
+      sectionId,
+      "dish",
+      dishId
+    )
+  );
+  return dishSnapshot.data();
+}

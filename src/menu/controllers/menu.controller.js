@@ -5,18 +5,22 @@ import {
   createRestaurantMenuSection,
   updateRestaurantMenuSection,
   deleteRestaurantMenuSection,
+  createRestaurantMenuSectionDish,
 } from "../models/models.js";
 import {
   getRestaurantMenu,
   getMenuById,
   getRestaurantMenuSection,
   getMenuSectionById,
+  getRestaurantMenuDish,
+  getMenuDishById,
 } from "../utils/utils.js";
 import {
   validateMenuData,
   validateRestaurantId,
   validateMenuId,
   validateSectionId,
+  validateDishId,
 } from "../validators/validations.js";
 
 // CRUD OPERATIONS FOR MENU //
@@ -195,4 +199,82 @@ export const deleteMenuSection = async (req, res) => {
 
   await deleteRestaurantMenuSection(restaurantId, menuId, sectionId);
   return res.status(204).json({ message: "Section deleted successfully" });
+};
+
+// CRUD OPERATIONS FOR DISHES //
+// TODO: Valorar como vamos a gestionar si aquí o en otra query, que al cliente le aparezcan únicamente
+// los platos que están disponibles (available: True)
+export const showMenuSectionDishes = async (req, res) => {
+  const { restaurantId, menuId, sectionId } = req.params;
+  if (!(await validateRestaurantId(restaurantId))) {
+    return res.status(404).json({ message: "Restaurant not found" });
+  }
+  if (!(await validateMenuId(restaurantId, menuId))) {
+    return res.status(404).json({ message: "Menu not found" });
+  }
+  if (!(await validateSectionId(restaurantId, menuId, sectionId))) {
+    return res.status(404).json({ message: "Section not found" });
+  }
+  const dishes = await getRestaurantMenuDish(restaurantId, menuId, sectionId);
+  return res.status(200).json(dishes);
+};
+
+export const showDishById = async (req, res) => {
+  const { restaurantId, menuId, sectionId, dishId } = req.params;
+  if (!(await validateRestaurantId(restaurantId))) {
+    return res.status(404).json({ message: "Restaurant not found" });
+  }
+  if (!(await validateMenuId(restaurantId, menuId))) {
+    return res.status(404).json({ message: "Menu not found" });
+  }
+  if (!(await validateSectionId(restaurantId, menuId, sectionId))) {
+    return res.status(404).json({ message: "Section not found" });
+  }
+  if (!(await validateDishId(restaurantId, menuId, sectionId, dishId))) {
+    return res.status(404).json({ message: "Dish not found" });
+  }
+  const dish = await getMenuDishById(restaurantId, menuId, sectionId, dishId);
+  return res.status(200).json(dish);
+};
+
+export const creteMenuSectionDish = async (req, res) => {
+  const { name, description, price, available } = req.body;
+  const { restaurantId, menuId, sectionId } = req.params;
+  if (!(await validateRestaurantId(restaurantId))) {
+    return res.status(404).json({ message: "Invalid restaurant id" });
+  }
+  if (!(await validateMenuId(restaurantId, menuId))) {
+    return res.status(404).json({ message: "Invalid menu id" });
+  }
+  if (!(await validateSectionId(restaurantId, menuId, sectionId))) {
+    return res.status(404).json({ message: "Invalid section id" });
+  }
+  if (!validateMenuData(name, available, true)) {
+    return res.status(400).json({ message: "Invalid menu's dish data" });
+  }
+
+  if (price < 0 || isNaN(price) || price === "") {
+    return res.status(400).json({ message: "Invalid price" });
+  }
+
+  await createRestaurantMenuSectionDish(
+    restaurantId,
+    menuId,
+    sectionId,
+    name,
+    description,
+    price,
+    available
+  );
+  for (let dish of await getRestaurantMenuDish(
+    restaurantId,
+    menuId,
+    sectionId
+  )) {
+    if (dish.name === name) {
+      return res.status(201).json({
+        message: `Dish with id ${dish.id} created successfully`,
+      });
+    }
+  }
 };

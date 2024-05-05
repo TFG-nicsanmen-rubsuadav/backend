@@ -120,3 +120,31 @@ export async function deleteRestaurantMenuSection(
     )
   );
 }
+
+// DISH METHODS //
+export async function createRestaurantMenuSectionDish(
+  restaurantId,
+  menuId,
+  sectionId,
+  name,
+  description,
+  price,
+  available
+) {
+  const dishCollection = collection(
+    FIREBASE_DB,
+    "restaurants",
+    restaurantId,
+    "menu",
+    menuId,
+    "section",
+    sectionId,
+    "dish"
+  );
+  await addDoc(dishCollection, {
+    name,
+    description,
+    price,
+    available,
+  });
+}

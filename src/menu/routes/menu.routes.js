@@ -13,6 +13,9 @@ import {
   showSectionById,
   updateMenuSection,
   deleteMenuSection,
+  creteMenuSectionDish,
+  showDishById,
+  showMenuSectionDishes,
 } from "../controllers/menu.controller.js";
 
 const router = Router();
@@ -42,5 +45,18 @@ router.delete(
   checkOwner,
   deleteMenuSection
 );
+
+// DISH ROUTES //
+router.post(
+  "/:restaurantId/:menuId/:sectionId/createDish",
+  checkOwner,
+  creteMenuSectionDish
+);
+router.get(
+  "/:restaurantId/:menuId/:sectionId/showDishes",
+  checkOwner,
+  showMenuSectionDishes
+);
+router.get("/:restaurantId/:menuId/:sectionId/showDish/:dishId", showDishById);
 
 export default router;
