@@ -128,8 +128,9 @@ export async function createRestaurantMenuSectionDish(
   sectionId,
   name,
   description,
-  price,
-  available
+  rations,
+  available,
+  allergens
 ) {
   const dishCollection = collection(
     FIREBASE_DB,
@@ -144,7 +145,63 @@ export async function createRestaurantMenuSectionDish(
   await addDoc(dishCollection, {
     name,
     description,
-    price,
+    rations,
     available,
+    allergens,
   });
+}
+
+export async function updateRestaurantMenuSectionDish(
+  restaurantId,
+  menuId,
+  sectionId,
+  dishId,
+  name,
+  description,
+  rations,
+  available,
+  allergens
+) {
+  let updateObject = {};
+  if (name !== undefined) updateObject.name = name;
+  if (description !== undefined) updateObject.description = description;
+  if (rations !== undefined) updateObject.rations = rations;
+  if (available !== undefined) updateObject.available = available;
+  if (allergens !== undefined) updateObject.allergens = allergens;
+
+  await updateDoc(
+    doc(
+      FIREBASE_DB,
+      "restaurants",
+      restaurantId,
+      "menu",
+      menuId,
+      "section",
+      sectionId,
+      "dish",
+      dishId
+    ),
+    updateObject
+  );
+}
+
+export async function deleteRestaurantMenuSectionDish(
+  restaurantId,
+  menuId,
+  sectionId,
+  dishId
+) {
+  await deleteDoc(
+    doc(
+      FIREBASE_DB,
+      "restaurants",
+      restaurantId,
+      "menu",
+      menuId,
+      "section",
+      sectionId,
+      "dish",
+      dishId
+    )
+  );
 }

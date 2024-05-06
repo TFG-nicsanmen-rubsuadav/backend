@@ -3,6 +3,23 @@ import { collection, getDocs, getDoc, doc } from "firebase/firestore";
 // local imports
 import { FIREBASE_DB } from "../../../firebaseConfig.js";
 
+export const allergensList = [
+  "gluten",
+  "crustáceos",
+  "huevos",
+  "pescado",
+  "cacahuetes",
+  "soja",
+  "lácteos",
+  "frutos de cáscara",
+  "apio",
+  "mostaza",
+  "granos de sésamo",
+  "dióxido de azufre y sulfitos",
+  "altramuces",
+  "moluscos"
+];
+
 // MENU METHODS //
 export async function getRestaurantMenu(restaurantId) {
   const menuSnapshot = await getDocs(

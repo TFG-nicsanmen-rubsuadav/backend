@@ -6,6 +6,8 @@ import {
   updateRestaurantMenuSection,
   deleteRestaurantMenuSection,
   createRestaurantMenuSectionDish,
+  updateRestaurantMenuSectionDish,
+  deleteRestaurantMenuSectionDish,
 } from "../models/models.js";
 import {
   getRestaurantMenu,
@@ -14,6 +16,7 @@ import {
   getMenuSectionById,
   getRestaurantMenuDish,
   getMenuDishById,
+  allergensList,
 } from "../utils/utils.js";
 import {
   validateMenuData,
@@ -238,7 +241,7 @@ export const showDishById = async (req, res) => {
 };
 
 export const creteMenuSectionDish = async (req, res) => {
-  const { name, description, price, available } = req.body;
+  const { name, description, rations, available, allergens } = req.body;
   const { restaurantId, menuId, sectionId } = req.params;
   if (!(await validateRestaurantId(restaurantId))) {
     return res.status(404).json({ message: "Invalid restaurant id" });
@@ -253,8 +256,14 @@ export const creteMenuSectionDish = async (req, res) => {
     return res.status(400).json({ message: "Invalid menu's dish data" });
   }
 
-  if (price < 0 || isNaN(price) || price === "") {
-    return res.status(400).json({ message: "Invalid price" });
+  if (!Array.isArray(allergens)) {
+    return res.status(400).json({ message: "Allergens must be an array" });
+  }
+
+  for (let allergen of allergens) {
+    if (!allergensList.includes(allergen)) {
+      return res.status(400).json({ message: `Invalid allergen: ${allergen}` });
+    }
   }
 
   await createRestaurantMenuSectionDish(
@@ -263,8 +272,9 @@ export const creteMenuSectionDish = async (req, res) => {
     sectionId,
     name,
     description,
-    price,
-    available
+    rations,
+    available,
+    allergens
   );
   for (let dish of await getRestaurantMenuDish(
     restaurantId,
@@ -277,4 +287,70 @@ export const creteMenuSectionDish = async (req, res) => {
       });
     }
   }
+};
+
+export const updateDish = async (req, res) => {
+  const { name, description, rations, available, allergens } = req.body;
+  const { restaurantId, menuId, sectionId, dishId } = req.params;
+  if (!(await validateRestaurantId(restaurantId))) {
+    return res.status(404).json({ message: "Invalid restaurant id" });
+  }
+  if (!(await validateMenuId(restaurantId, menuId))) {
+    return res.status(404).json({ message: "Invalid menu id" });
+  }
+  if (!(await validateSectionId(restaurantId, menuId, sectionId))) {
+    return res.status(404).json({ message: "Invalid section id" });
+  }
+  if (!(await validateDishId(restaurantId, menuId, sectionId, dishId))) {
+    return res.status(404).json({ message: "Invalid dish id" });
+  }
+  if (!validateMenuData(name, available, false)) {
+    return res.status(400).json({ message: "Invalid menu's dish data" });
+  }
+  if (!Array.isArray(allergens)) {
+    return res.status(400).json({ message: "Allergens must be an array" });
+  }
+
+  for (let allergen of allergens) {
+    if (!allergensList.includes(allergen)) {
+      return res.status(400).json({ message: `Invalid allergen: ${allergen}` });
+    }
+  }
+
+  await updateRestaurantMenuSectionDish(
+    restaurantId,
+    menuId,
+    sectionId,
+    dishId,
+    name,
+    description,
+    rations,
+    available,
+    allergens
+  );
+  return res.status(200).json({ message: "Dish updated successfully" });
+};
+
+export const deleteDish = async (req, res) => {
+  const { restaurantId, menuId, sectionId, dishId } = req.params;
+  if (!(await validateRestaurantId(restaurantId))) {
+    return res.status(404).json({ message: "Invalid restaurant id" });
+  }
+  if (!(await validateMenuId(restaurantId, menuId))) {
+    return res.status(404).json({ message: "Invalid menu id" });
+  }
+  if (!(await validateSectionId(restaurantId, menuId, sectionId))) {
+    return res.status(404).json({ message: "Invalid section id" });
+  }
+  if (!(await validateDishId(restaurantId, menuId, sectionId, dishId))) {
+    return res.status(404).json({ message: "Invalid dish id" });
+  }
+
+  await deleteRestaurantMenuSectionDish(
+    restaurantId,
+    menuId,
+    sectionId,
+    dishId
+  );
+  return res.status(204).json({ message: "Dish deleted successfully" });
 };

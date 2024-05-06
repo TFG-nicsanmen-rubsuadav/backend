@@ -16,6 +16,8 @@ import {
   creteMenuSectionDish,
   showDishById,
   showMenuSectionDishes,
+  updateDish,
+  deleteDish,
 } from "../controllers/menu.controller.js";
 
 const router = Router();
@@ -58,5 +60,15 @@ router.get(
   showMenuSectionDishes
 );
 router.get("/:restaurantId/:menuId/:sectionId/showDish/:dishId", showDishById);
+router.patch(
+  "/:restaurantId/:menuId/:sectionId/updateDish/:dishId",
+  checkOwner,
+  updateDish
+);
+router.delete(
+  "/:restaurantId/:menuId/:sectionId/deleteDish/:dishId",
+  checkOwner,
+  deleteDish
+);
 
 export default router;
