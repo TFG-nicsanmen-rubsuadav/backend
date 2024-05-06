@@ -94,10 +94,10 @@ export const updateMenu = async (req, res) => {
 export const deleteMenu = async (req, res) => {
   const { restaurantId, menuId } = req.params;
   if (!(await validateRestaurantId(restaurantId))) {
-    return res.status(404).json({ message: "Invalid restaurant id" });
+    return res.status(404).json({ message: "Restaurant not found" });
   }
   if (!(await validateMenuId(restaurantId, menuId))) {
-    return res.status(404).json({ message: "Invalid menu id" });
+    return res.status(404).json({ message: "Menu not found" });
   }
 
   await deleteRestaurantMenu(restaurantId, menuId);
@@ -136,10 +136,10 @@ export const createMenuSection = async (req, res) => {
   const { name, description, available } = req.body;
   const { restaurantId, menuId } = req.params;
   if (!(await validateRestaurantId(restaurantId))) {
-    return res.status(404).json({ message: "Invalid restaurant id" });
+    return res.status(404).json({ message: "Restaurant not found" });
   }
   if (!(await validateMenuId(restaurantId, menuId))) {
-    return res.status(404).json({ message: "Invalid menu id" });
+    return res.status(404).json({ message: "Menu not found" });
   }
   if (!validateMenuData(name, available, true)) {
     return res.status(400).json({ message: "Invalid menu's section data" });
@@ -165,13 +165,13 @@ export const updateMenuSection = async (req, res) => {
   const { name, description, available } = req.body;
   const { restaurantId, menuId, sectionId } = req.params;
   if (!(await validateRestaurantId(restaurantId))) {
-    return res.status(404).json({ message: "Invalid restaurant id" });
+    return res.status(404).json({ message: "Restaurant not found" });
   }
   if (!(await validateMenuId(restaurantId, menuId))) {
-    return res.status(404).json({ message: "Invalid menu id" });
+    return res.status(404).json({ message: "Menu not found" });
   }
   if (!(await validateSectionId(restaurantId, menuId, sectionId))) {
-    return res.status(404).json({ message: "Invalid section id" });
+    return res.status(404).json({ message: "Section not found" });
   }
   if (!validateMenuData(name, available, false)) {
     return res.status(400).json({ message: "Invalid menu's section data" });
@@ -191,13 +191,13 @@ export const updateMenuSection = async (req, res) => {
 export const deleteMenuSection = async (req, res) => {
   const { restaurantId, menuId, sectionId } = req.params;
   if (!(await validateRestaurantId(restaurantId))) {
-    return res.status(404).json({ message: "Invalid restaurant id" });
+    return res.status(404).json({ message: "Restaurant not found" });
   }
   if (!(await validateMenuId(restaurantId, menuId))) {
-    return res.status(404).json({ message: "Invalid menu id" });
+    return res.status(404).json({ message: "Menu not found" });
   }
   if (!(await validateSectionId(restaurantId, menuId, sectionId))) {
-    return res.status(404).json({ message: "Invalid section id" });
+    return res.status(404).json({ message: "Section not found" });
   }
 
   await deleteRestaurantMenuSection(restaurantId, menuId, sectionId);
@@ -244,16 +244,16 @@ export const creteMenuSectionDish = async (req, res) => {
   const { name, description, rations, available, allergens } = req.body;
   const { restaurantId, menuId, sectionId } = req.params;
   if (!(await validateRestaurantId(restaurantId))) {
-    return res.status(404).json({ message: "Invalid restaurant id" });
+    return res.status(404).json({ message: "Restaurant not found" });
   }
   if (!(await validateMenuId(restaurantId, menuId))) {
-    return res.status(404).json({ message: "Invalid menu id" });
+    return res.status(404).json({ message: "Menu not found" });
   }
   if (!(await validateSectionId(restaurantId, menuId, sectionId))) {
-    return res.status(404).json({ message: "Invalid section id" });
+    return res.status(404).json({ message: "Section not found" });
   }
   if (!validateMenuData(name, available, true)) {
-    return res.status(400).json({ message: "Invalid menu's dish data" });
+    return res.status(400).json({ message: "Dish not found" });
   }
 
   if (!Array.isArray(allergens)) {
@@ -293,16 +293,16 @@ export const updateDish = async (req, res) => {
   const { name, description, rations, available, allergens } = req.body;
   const { restaurantId, menuId, sectionId, dishId } = req.params;
   if (!(await validateRestaurantId(restaurantId))) {
-    return res.status(404).json({ message: "Invalid restaurant id" });
+    return res.status(404).json({ message: "Restaurant not found" });
   }
   if (!(await validateMenuId(restaurantId, menuId))) {
-    return res.status(404).json({ message: "Invalid menu id" });
+    return res.status(404).json({ message: "Menu not found" });
   }
   if (!(await validateSectionId(restaurantId, menuId, sectionId))) {
-    return res.status(404).json({ message: "Invalid section id" });
+    return res.status(404).json({ message: "Section not found" });
   }
   if (!(await validateDishId(restaurantId, menuId, sectionId, dishId))) {
-    return res.status(404).json({ message: "Invalid dish id" });
+    return res.status(404).json({ message: "Dish not found" });
   }
   if (!validateMenuData(name, available, false)) {
     return res.status(400).json({ message: "Invalid menu's dish data" });
@@ -310,7 +310,6 @@ export const updateDish = async (req, res) => {
   if (!Array.isArray(allergens)) {
     return res.status(400).json({ message: "Allergens must be an array" });
   }
-
   for (let allergen of allergens) {
     if (!allergensList.includes(allergen)) {
       return res.status(400).json({ message: `Invalid allergen: ${allergen}` });
@@ -334,16 +333,16 @@ export const updateDish = async (req, res) => {
 export const deleteDish = async (req, res) => {
   const { restaurantId, menuId, sectionId, dishId } = req.params;
   if (!(await validateRestaurantId(restaurantId))) {
-    return res.status(404).json({ message: "Invalid restaurant id" });
+    return res.status(404).json({ message: "Restaurant not found" });
   }
   if (!(await validateMenuId(restaurantId, menuId))) {
-    return res.status(404).json({ message: "Invalid menu id" });
+    return res.status(404).json({ message: "Menu not found" });
   }
   if (!(await validateSectionId(restaurantId, menuId, sectionId))) {
-    return res.status(404).json({ message: "Invalid section id" });
+    return res.status(404).json({ message: "Section not found" });
   }
   if (!(await validateDishId(restaurantId, menuId, sectionId, dishId))) {
-    return res.status(404).json({ message: "Invalid dish id" });
+    return res.status(404).json({ message: "Dish not found" });
   }
 
   await deleteRestaurantMenuSectionDish(
