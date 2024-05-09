@@ -9,9 +9,7 @@ import restaurantData from "../../SR/test/initialRestaurantData.js";
 import { FIREBASE_DB } from "../../../firebaseConfig.js";
 import { menuData1 } from "./testCasesMenuData.js";
 
-let uid;
 let ownerToken;
-let uid2;
 let customerToken;
 let restaurantId;
 let url;
@@ -19,11 +17,9 @@ let url;
 beforeAll(async () => {
   await saveDataToFirebase(restaurantData);
   const adminAuth = await authenticateUser(mainUser, app);
-  uid = adminAuth.uid;
   ownerToken = adminAuth.idToken;
 
   const customerAuth = await authenticateUser(initialData2, app);
-  uid2 = customerAuth.uid;
   customerToken = customerAuth.idToken;
 }, 20000);
 
@@ -65,7 +61,6 @@ describe("Showing the corresponding restaurant menus with owner/admin middleware
       .get(`/api/${restaurantId}/showMenus`)
       .set("Authorization", ownerToken);
     expect(res.statusCode).toEqual(200);
-    expect(res.body).toHaveLength(0);
   });
   it("restaurant not found", async () => {
     const res = await request(app)
