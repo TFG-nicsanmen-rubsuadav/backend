@@ -1,7 +1,11 @@
 import request from "supertest";
 
 // local imports
-import { menuData1, menuSectionData1 } from "./testCasesMenuData";
+import {
+  menuData1,
+  menuSectionData1,
+  menuDishData1,
+} from "./testCasesMenuData";
 import app from "../../app";
 
 export async function createInitialMenu(url, ownerToken, restaurantId) {
@@ -24,4 +28,23 @@ export async function createInitialMenu(url, ownerToken, restaurantId) {
     .split(" created successfully")[0];
 
   return { menuId, sectionId };
+}
+
+export async function createInitialMenuDish(url, ownerToken, restaurantId) {
+  const { menuId, sectionId } = await createInitialMenu(
+    url,
+    ownerToken,
+    restaurantId
+  );
+
+  const res3 = await request(app)
+    .post(`/api/${restaurantId}/${menuId}/${sectionId}/createDish`)
+    .set("Authorization", ownerToken)
+    .send(menuDishData1);
+
+  const dishId = res3.body.message
+    .split("Dish with id ")[1]
+    .split(" created successfully")[0];
+
+  return { menuId, sectionId, res3, dishId };
 }

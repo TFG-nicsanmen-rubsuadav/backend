@@ -27,3 +27,13 @@ export const initialData3 = {
   birthDate: "10/10/2000",
   rol: "admin",
 };
+
+export const initialData4 = {
+  name: "Owner 2",
+  lastName: "Owner 2",
+  email: "owner2@gmail.com",
+  password: "@Password1234",
+  phone: "696981002",
+  birthDate: "10/10/1996",
+  rol: "owner",
+};
