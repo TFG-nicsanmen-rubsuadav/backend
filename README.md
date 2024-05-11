@@ -1,0 +1,3 @@
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/5d9e43d3522c4542a10fd017f2a32412)](https://app.codacy.com/gh/TFG-nicsanmen-rubsuadav/backend/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_grade)
+
+[![Codacy Badge](https://app.codacy.com/project/badge/Coverage/5d9e43d3522c4542a10fd017f2a32412)](https://app.codacy.com/gh/TFG-nicsanmen-rubsuadav/backend/dashboard?utm_source=gh&utm_medium=referral&utm_content=&utm_campaign=Badge_coverage)
