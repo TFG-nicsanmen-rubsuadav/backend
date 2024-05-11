@@ -8,7 +8,8 @@
     "start": "node src/index.js",
     "startDM": "set NODE_ENV=development&& nodemon src/index.js",
     "startEmulators": "firebase emulators:start",
-    "test": "set NODE_ENV=test&& jest --config jest.config.cjs --detectOpenHandles --forceExit --errorOnDeprecated --coverage --reporters='default'"
+    "test": "set NODE_ENV=test&& jest --config jest.config.cjs --detectOpenHandles --forceExit --errorOnDeprecated --coverage --reporters='default'",
+    "test2" :"set NODE_ENV=test&& jest --config jest.config.cjs --detectOpenHandles --forceExit --errorOnDeprecated"
   },
   "keywords": [],
   "author": "",
