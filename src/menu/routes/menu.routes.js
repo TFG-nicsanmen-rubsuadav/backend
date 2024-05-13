@@ -24,7 +24,7 @@ const router = Router();
 
 // MENU ROUTES //
 router.post("/:restaurantId/createMenu", checkOwner, createMenu);
-router.get("/:restaurantId/showMenus", checkOwner, showRestaurantMenu);
+router.get("/:restaurantId/showMenus", showRestaurantMenu);
 router.get("/:restaurantId/showMenu/:menuId", showMenuById);
 router.patch("/:restaurantId/updateMenu/:menuId", checkOwner, updateMenu);
 router.delete("/:restaurantId/deleteMenu/:menuId", checkOwner, deleteMenu);
@@ -35,7 +35,7 @@ router.post(
   checkOwner,
   createMenuSection
 );
-router.get("/:restaurantId/:menuId/showSections", checkOwner, showMenuSection);
+router.get("/:restaurantId/:menuId/showSections", showMenuSection);
 router.get("/:restaurantId/:menuId/showSection/:sectionId", showSectionById);
 router.patch(
   "/:restaurantId/:menuId/updateSection/:sectionId",
@@ -56,7 +56,6 @@ router.post(
 );
 router.get(
   "/:restaurantId/:menuId/:sectionId/showDishes",
-  checkOwner,
   showMenuSectionDishes
 );
 router.get("/:restaurantId/:menuId/:sectionId/showDish/:dishId", showDishById);
