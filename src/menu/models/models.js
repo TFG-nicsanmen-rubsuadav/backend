@@ -26,6 +26,7 @@ export async function createRestaurantMenu(
     name,
     description,
     available,
+    createdAt: new Date(),
   });
 }
 
@@ -73,6 +74,7 @@ export async function createRestaurantMenuSection(
     name,
     description,
     available,
+    createdAt: new Date(),
   });
 }
 
@@ -148,6 +150,7 @@ export async function createRestaurantMenuSectionDish(
     rations,
     available,
     allergens,
+    createdAt: new Date(),
   });
 }
 
