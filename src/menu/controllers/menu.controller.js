@@ -27,6 +27,26 @@ import {
 } from "../validators/validations.js";
 
 // CRUD OPERATIONS FOR MENU //
+export const getFullMenuById = async (req, res) => {
+  const { restaurantId, menuId } = req.params;
+  if (!(await validateRestaurantId(restaurantId))) {
+    return res.status(404).json({ message: "Restaurant not found" });
+  }
+  if (!(await validateMenuId(restaurantId, menuId))) {
+    return res.status(404).json({ message: "Menu not found" });
+  }
+  const sections = await getRestaurantMenuSection(restaurantId, menuId);
+  for (let section of sections) {
+    const dishesSnapshot = await getRestaurantMenuDish(
+      restaurantId,
+      menuId,
+      section.id
+    );
+    section.dishes = dishesSnapshot;
+  }
+  return res.status(200).json({ sections });
+};
+
 export const showMenuById = async (req, res) => {
   const { restaurantId, menuId } = req.params;
   if (!(await validateRestaurantId(restaurantId))) {

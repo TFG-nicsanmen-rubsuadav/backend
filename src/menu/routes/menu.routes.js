@@ -18,6 +18,7 @@ import {
   showMenuSectionDishes,
   updateDish,
   deleteDish,
+  getFullMenuById,
 } from "../controllers/menu.controller.js";
 
 const router = Router();
@@ -28,6 +29,7 @@ router.get("/:restaurantId/showMenus", showRestaurantMenu);
 router.get("/:restaurantId/showMenu/:menuId", showMenuById);
 router.patch("/:restaurantId/updateMenu/:menuId", checkOwner, updateMenu);
 router.delete("/:restaurantId/deleteMenu/:menuId", checkOwner, deleteMenu);
+router.get("/:restaurantId/:menuId/fullMenu", getFullMenuById);
 
 // SECTION ROUTES //
 router.post(

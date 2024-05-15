@@ -55,17 +55,28 @@ describe("Controlling menu endpoints with owner/admin middleware throwing invali
   });
 });
 
+describe("Trying to show the full menu", () => {
+  it("With invalid restaurantId", async () => {
+    const res = await request(app).get("/api/invalidId/invalidId/fullMenu");
+    expect(res.statusCode).toEqual(404);
+    expect(res.body.message).toEqual("Restaurant not found");
+  });
+  it("With invalid menuId", async () => {
+    const res = await request(app).get(
+      `/api/${restaurantId}/invalidId/fullMenu`
+    );
+    expect(res.statusCode).toEqual(404);
+    expect(res.body.message).toEqual("Menu not found");
+  });
+});
+
 describe("Showing the corresponding restaurant menus with owner/admin middleware", () => {
   it("showing the corresponding restaurant menus", async () => {
-    const res = await request(app)
-      .get(`/api/${restaurantId}/showMenus`)
-      .set("Authorization", ownerToken);
+    const res = await request(app).get(`/api/${restaurantId}/showMenus`);
     expect(res.statusCode).toEqual(200);
   });
   it("restaurant not found", async () => {
-    const res = await request(app)
-      .get("/api/invalidId/showMenus")
-      .set("Authorization", ownerToken);
+    const res = await request(app).get("/api/invalidId/showMenus");
     expect(res.statusCode).toEqual(404);
     expect(res.body.message).toEqual("Restaurant not found");
   });
@@ -89,6 +100,12 @@ describe("Creating a menu with owner/admin middleware", () => {
       `/api/${restaurantId}/showMenu/${res2.body[0].id}`
     );
     expect(res3.statusCode).toEqual(200);
+
+    // showing the full menu
+    const res4 = await request(app).get(
+      `/api/${restaurantId}/${res2.body[0].id}/fullMenu`
+    );
+    expect(res4.statusCode).toEqual(200);
   });
   it("creating a menu with missing data (available)", async () => {
     const res = await request(app)
@@ -154,16 +171,14 @@ describe("Updating a menu with owner/admin middleware", () => {
 
 describe("Showing invalid ids", () => {
   it("invalid restaurantId", async () => {
-    const res = await request(app)
-      .get("/api/invalidId/showMenu/invalidId")
-      .set("Authorization", ownerToken);
+    const res = await request(app).get("/api/invalidId/showMenu/invalidId");
     expect(res.statusCode).toEqual(404);
     expect(res.body.message).toEqual("Restaurant not found");
   });
   it("invalid menuId", async () => {
-    const res = await request(app)
-      .get(`/api/${restaurantId}/showMenu/invalidId`)
-      .set("Authorization", ownerToken);
+    const res = await request(app).get(
+      `/api/${restaurantId}/showMenu/invalidId`
+    );
     expect(res.statusCode).toEqual(404);
     expect(res.body.message).toEqual("Menu not found");
   });
