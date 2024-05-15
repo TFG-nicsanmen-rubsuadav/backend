@@ -17,7 +17,7 @@ export const allergensList = [
   "granos de sésamo",
   "dióxido de azufre y sulfitos",
   "altramuces",
-  "moluscos"
+  "moluscos",
 ];
 
 // MENU METHODS //
@@ -47,7 +47,15 @@ export async function getRestaurantMenuSection(restaurantId, menuId) {
       "section"
     )
   );
-  return sectionSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+  let sections = sectionSnapshot.docs.map((doc) => ({
+    ...doc.data(),
+    id: doc.id,
+  }));
+
+  // Ordenar las secciones por fecha de creación
+  sections.sort((a, b) => a.createdAt - b.createdAt);
+
+  return sections;
 }
 
 export async function getMenuSectionById(restaurantId, menuId, sectionId) {
@@ -79,7 +87,9 @@ export async function getRestaurantMenuDish(restaurantId, menuId, sectionId) {
       "dish"
     )
   );
-  return dishSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+  let dishes = dishSnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
+  dishes.sort((a, b) => a.createdAt - b.createdAt);
+  return dishes;
 }
 
 export async function getMenuDishById(restaurantId, menuId, sectionId, dishId) {
