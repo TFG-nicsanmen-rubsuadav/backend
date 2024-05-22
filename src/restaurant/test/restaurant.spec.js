@@ -17,6 +17,14 @@ beforeEach(async () => {
   restaurantId = snapshotData.docs[0].id;
 }, 20000);
 
+describe("Getting all the restaurants", () => {
+  it("Can get all restaurants", async () => {
+    const res = await request(app).get("/api/restaurants");
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBeGreaterThan(0);
+  });
+});
+
 describe("Testing trying to show restaurant", () => {
   it("invalid restaurantId", async () => {
     const res = await request(app).get("/api/restaurant/invalidId");

@@ -54,7 +54,7 @@ export async function populateUser(uid, user) {
   });
 }
 
-async function createPaymentSession(user, req) {
+async function createPaymentSession(user, req, restId) {
   const checkoutSessionsRef = collection(
     FIREBASE_DB,
     "users",
@@ -63,8 +63,8 @@ async function createPaymentSession(user, req) {
   );
   const docRef = await addDoc(checkoutSessionsRef, {
     price: "price_1P8kwkA8KMaHM1rgyAdexqDP",
-    success_url: req.protocol + "://" + req.get("host"),
-    cancel_url: req.protocol + "://" + req.get("host"),
+    success_url: `https://tfg-nico-ruben.web.app/restaurant/${restId}`,
+    cancel_url: "https://tfg-nico-ruben.web.app/login",
   });
 
   return new Promise((resolve, reject) => {
@@ -84,9 +84,9 @@ async function createPaymentSession(user, req) {
   });
 }
 
-export async function getCheckoutSession(user, req) {
+export async function getCheckoutSession(user, req, restId) {
   try {
-    const url = await createPaymentSession(user, req);
+    const url = await createPaymentSession(user, req, restId);
     return url;
   } catch (error) {
     return error;
