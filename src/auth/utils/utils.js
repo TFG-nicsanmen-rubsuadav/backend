@@ -63,8 +63,8 @@ async function createPaymentSession(user, req, restId) {
   );
   const docRef = await addDoc(checkoutSessionsRef, {
     price: "price_1P8kwkA8KMaHM1rgyAdexqDP",
-    success_url: `http://localhost:5173/restaurant/${restId}`,
-    cancel_url: "http://localhost:5173/login",
+    success_url: `https://tfg-nico-ruben.web.app/restaurant/${restId}`,
+    cancel_url: "https://tfg-nico-ruben.web.app/login",
   });
 
   return new Promise((resolve, reject) => {
