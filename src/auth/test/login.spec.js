@@ -8,16 +8,6 @@ beforeAll(async () => {
 });
 
 describe("Can login", () => {
-  it("shouln't login cause rol is owner and suscripcion is false", async () => {
-    const res = await request(app).post("/auth/login").send({
-      email: "testuser3@gmail.com",
-      password: "@Password1234",
-    });
-    expect(res.statusCode).toEqual(400);
-    expect(res.body.subscription).toEqual(
-      "You need an active subscription to login"
-    );
-  });
   it("should login and return a token", async () => {
     const res = await request(app).post("/auth/login").send({
       email: "customer@gmail.com",

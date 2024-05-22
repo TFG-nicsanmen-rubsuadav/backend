@@ -236,4 +236,19 @@ export default [
     expectedProperty: "birthDateError",
     expectedErrorMessage: "La fecha de nacimiento es inválida",
   },
+  {
+    description: "should fail when onwer didnt select a restaurant",
+    data: {
+      name: "John",
+      lastName: "Doe",
+      email: "johndoe@gmail.com",
+      password: "Password1!",
+      phone: "600123456",
+      birthDate: "10/07/1998",
+      rol: "owner",
+    },
+    expectedStatusCode: 400,
+    expectedProperty: "restId",
+    expectedErrorMessage: "You must select a restaurant",
+  },
 ];

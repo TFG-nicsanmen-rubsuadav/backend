@@ -1,5 +1,5 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc } from "firebase/firestore";
+import { doc, setDoc, updateDoc } from "firebase/firestore";
 
 // local imports
 import { FIREBASE_DB, FIREBASE_AUTH } from "../../../firebaseConfig.js";
@@ -13,7 +13,8 @@ import {
 const roles = ["owner", "customer", "admin"];
 
 export const register = async (req, res) => {
-  const { name, lastName, email, password, phone, birthDate, rol } = req.body;
+  const { name, lastName, email, password, phone, birthDate, rol, restId } =
+    req.body;
 
   if (!roles.includes(rol)) {
     return res.status(400).send({ rol: "Invalid role" });
@@ -27,6 +28,10 @@ export const register = async (req, res) => {
     return res.status(400).send(val);
   }
 
+  if (rol === "owner" && !restId) {
+    return res.status(400).send({ restId: "You must select a restaurant" });
+  }
+
   try {
     const userCredential = await createUserWithEmailAndPassword(
       FIREBASE_AUTH,
@@ -36,14 +41,16 @@ export const register = async (req, res) => {
 
     const user = userCredential.user;
 
-    await populateUser(user.uid, {
+    const userData = {
       name,
       lastName,
       email,
       phone,
       birthDate,
       password,
-    });
+    };
+
+    await populateUser(user.uid, userData);
 
     const rolesIds = await populateRoles();
 
@@ -54,7 +61,10 @@ export const register = async (req, res) => {
     const token = await user.getIdToken();
 
     if (rol === "owner") {
-      const { sessionId } = await getCheckoutSession(user, req);
+      const restaurantDoc = doc(FIREBASE_DB, "restaurants", restId);
+      await updateDoc(userDoc, { restaurantId: restId });
+      await updateDoc(restaurantDoc, { ownerId: user.uid });
+      const { sessionId } = await getCheckoutSession(user, req, restId);
       return res.status(201).json({ token, uid: user.uid, sessionId, rol });
     }
 

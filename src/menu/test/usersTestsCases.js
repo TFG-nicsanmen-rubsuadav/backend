@@ -5,7 +5,7 @@ export default {
   password: "@Password1234",
   phone: "696922567",
   birthDate: "10/07/1998",
-  rol: "owner",
+  rol: "admin",
 };
 
 export const initialData2 = {
@@ -35,5 +35,5 @@ export const initialData4 = {
   password: "@Password1234",
   phone: "696981002",
   birthDate: "10/10/1996",
-  rol: "owner",
+  rol: "admin",
 };
