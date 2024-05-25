@@ -36,3 +36,21 @@ describe("Testing trying to show restaurant", () => {
     expect(res.statusCode).toBe(200);
   });
 });
+
+describe("Testing searching for a restaurant", () => {
+  it("invalid query parameters", async () => {
+    const res = await request(app).get("/api/restaurant/search");
+    expect(res.statusCode).toBe(400);
+    expect(res.body.message).toBe("Missing query parameters");
+  });
+
+  it("valid query parameters", async () => {
+    const res = await request(app).get(
+      `/api/restaurant/search?name=${
+        restaurantData[0].restaurantName
+      }&city=${restaurantData[0].fullAddress.split(", ").pop()}`
+    );
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBeGreaterThan(0);
+  });
+});
