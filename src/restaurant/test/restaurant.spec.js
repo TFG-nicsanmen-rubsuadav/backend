@@ -54,3 +54,35 @@ describe("Testing searching for a restaurant", () => {
     expect(res.body.length).toBeGreaterThan(0);
   });
 });
+
+describe("Testing getting the number of restaurants", () => {
+  it("Can get the number of restaurants", async () => {
+    const res = await request(app).get("/api/restaurants/count");
+    expect(res.statusCode).toBe(200);
+    expect(res.body.numberOfRestaurants).toBeGreaterThan(0);
+  });
+});
+
+describe("Testing getting the number of cities", () => {
+  it("Can get the number of cities", async () => {
+    const res = await request(app).get("/api/restaurants/numberOfCities");
+    expect(res.statusCode).toBe(200);
+    expect(res.body.numberOfCities).toBeGreaterThan(0);
+  });
+});
+
+describe("Testing getting all cities", () => {
+  it("Can get all cities", async () => {
+    const res = await request(app).get("/api/restaurants/cities");
+    expect(res.statusCode).toBe(200);
+    expect(res.body.cities.length).toBeGreaterThan(0);
+  });
+});
+
+describe("Testing getting the number of opinions", () => {
+  it("Can get the number of opinions", async () => {
+    const res = await request(app).get("/api/restaurants/numberOfOpinions");
+    expect(res.statusCode).toBe(200);
+    expect(res.body.numberOfOpinions).toBeGreaterThan(0);
+  });
+});
