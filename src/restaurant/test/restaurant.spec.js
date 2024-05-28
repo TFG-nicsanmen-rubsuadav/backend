@@ -36,3 +36,53 @@ describe("Testing trying to show restaurant", () => {
     expect(res.statusCode).toBe(200);
   });
 });
+
+describe("Testing searching for a restaurant", () => {
+  it("invalid query parameters", async () => {
+    const res = await request(app).get("/api/restaurant/search");
+    expect(res.statusCode).toBe(400);
+    expect(res.body.message).toBe("Missing query parameters");
+  });
+
+  it("valid query parameters", async () => {
+    const res = await request(app).get(
+      `/api/restaurant/search?name=${
+        restaurantData[0].restaurantName
+      }&city=${restaurantData[0].fullAddress.split(", ").pop()}`
+    );
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBeGreaterThan(0);
+  });
+});
+
+describe("Testing getting the number of restaurants", () => {
+  it("Can get the number of restaurants", async () => {
+    const res = await request(app).get("/api/restaurants/count");
+    expect(res.statusCode).toBe(200);
+    expect(res.body.numberOfRestaurants).toBeGreaterThan(0);
+  });
+});
+
+describe("Testing getting the number of cities", () => {
+  it("Can get the number of cities", async () => {
+    const res = await request(app).get("/api/restaurants/numberOfCities");
+    expect(res.statusCode).toBe(200);
+    expect(res.body.numberOfCities).toBeGreaterThan(0);
+  });
+});
+
+describe("Testing getting all cities", () => {
+  it("Can get all cities", async () => {
+    const res = await request(app).get("/api/restaurants/cities");
+    expect(res.statusCode).toBe(200);
+    expect(res.body.cities.length).toBeGreaterThan(0);
+  });
+});
+
+describe("Testing getting the number of opinions", () => {
+  it("Can get the number of opinions", async () => {
+    const res = await request(app).get("/api/restaurants/numberOfOpinions");
+    expect(res.statusCode).toBe(200);
+    expect(res.body.numberOfOpinions).toBeGreaterThan(0);
+  });
+});
