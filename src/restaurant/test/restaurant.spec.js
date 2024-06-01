@@ -5,8 +5,14 @@ import { collection, getDocs } from "firebase/firestore";
 import app, { saveDataToFirebase } from "../../app";
 import restaurantData from "../../SR/test/initialRestaurantData.js";
 import { FIREBASE_DB } from "../../../firebaseConfig.js";
+import { authenticateUser } from "../../auth/test/utils.js";
+import { initialData } from "./initialOwnerId.js";
 
 let restaurantId;
+let restaurantId2;
+let restaurantId3;
+let restaurantId4;
+let userId;
 
 beforeAll(async () => {
   await saveDataToFirebase(restaurantData);
@@ -15,6 +21,9 @@ beforeAll(async () => {
 beforeEach(async () => {
   const snapshotData = await getDocs(collection(FIREBASE_DB, "restaurants"));
   restaurantId = snapshotData.docs[0].id;
+  restaurantId2 = snapshotData.docs[1].id;
+  restaurantId3 = snapshotData.docs[2].id;
+  restaurantId4 = snapshotData.docs[3].id;
 }, 20000);
 
 describe("Getting all the restaurants", () => {
@@ -55,6 +64,25 @@ describe("Testing searching for a restaurant", () => {
   });
 });
 
+describe("Testing getRestaurantByUser", () => {
+  it("invalid userId", async () => {
+    const res = await request(app).get("/api/restaurant/restaurantByUser");
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBeGreaterThan(0);
+  });
+
+  it("valid userId", async () => {
+    const authRes = await authenticateUser(initialData, app);
+    userId = authRes.uid;
+    restaurantData[0].ownerId = userId;
+    const res = await request(app).get(
+      `/api/restaurant/restaurantByUser?userId=${userId}`
+    );
+    expect(res.statusCode).toBe(200);
+    expect(restaurantData[0].ownerId).toEqual(userId);
+  });
+});
+
 describe("Testing getting the number of restaurants", () => {
   it("Can get the number of restaurants", async () => {
     const res = await request(app).get("/api/restaurants/count");
@@ -84,5 +112,90 @@ describe("Testing getting the number of opinions", () => {
     const res = await request(app).get("/api/restaurants/numberOfOpinions");
     expect(res.statusCode).toBe(200);
     expect(res.body.numberOfOpinions).toBeGreaterThan(0);
+  });
+});
+
+describe("Testing updating restaurant visits", () => {
+  it("Can update restaurant visits (first time)", async () => {
+    const res = await request(app).get(`/api/restaurant/${restaurantId}/visit`);
+    expect(res.statusCode).toBe(200);
+  });
+
+  it("Can update restaurant visits (second time)", async () => {
+    const res = await request(app).get(`/api/restaurant/${restaurantId}/visit`);
+    expect(res.statusCode).toBe(200);
+  });
+});
+
+describe("Testing getting restaurant visits", () => {
+  it("Can get restaurant visits", async () => {
+    const res = await request(app).get(
+      `/api/restaurant/${restaurantId}/visits`
+    );
+    expect(res.statusCode).toBe(200);
+    expect(res.body.totalVisits).toBeGreaterThan(0);
+  });
+
+  it("Can't get restaurant visits", async () => {
+    const res = await request(app).get(
+      `/api/restaurant/${restaurantId2}/visits`
+    );
+    expect(res.statusCode).toBe(200);
+    expect(res.body.totalVisits).toBe(0);
+  });
+});
+
+describe("Testing getting restaurant visits by date", () => {
+  it("Can get restaurant visits by date", async () => {
+    const res = await request(app).get(
+      `/api/restaurant/${restaurantId}/visitsByDate?date=${
+        new Date().toISOString().split("T")[0]
+      }`
+    );
+    expect(res.statusCode).toBe(200);
+    expect(res.body.visits).toBeGreaterThan(0);
+  });
+
+  it("Can't get restaurant visits by date (another restaurant)", async () => {
+    const res = await request(app).get(
+      `/api/restaurant/${restaurantId3}/visitsByDate?date=${
+        new Date().toISOString().split("T")[0]
+      }`
+    );
+    expect(res.statusCode).toBe(200);
+    expect(res.body.visits).toBe(0);
+  });
+  it("Can't get restaurant visits by date (previos date than today)", async () => {
+    const res = await request(app).get(
+      `/api/restaurant/${restaurantId}/visitsByDate?date=2021-10-10`
+    );
+    expect(res.statusCode).toBe(200);
+    expect(res.body.visits).toBe(0);
+  });
+});
+
+describe("Testing getting restaurant visits by range", () => {
+  it("Can get restaurant visits by range (7 days)", async () => {
+    const res = await request(app).get(
+      `/api/restaurant/${restaurantId}/visitsByRange?days=7`
+    );
+    expect(res.statusCode).toBe(200);
+    expect(res.body.visits).toBeGreaterThan(0);
+  });
+
+  it("Can get restaurant visits by range (30 days)", async () => {
+    const res = await request(app).get(
+      `/api/restaurant/${restaurantId}/visitsByRange?days=30`
+    );
+    expect(res.statusCode).toBe(200);
+    expect(res.body.visits).toBeGreaterThan(0);
+  });
+
+  it("Can't get restaurant visits by range (another restaurant)", async () => {
+    const res = await request(app).get(
+      `/api/restaurant/${restaurantId4}/visitsByRange?days=7`
+    );
+    expect(res.statusCode).toBe(200);
+    expect(res.body.visits).toBe(0);
   });
 });

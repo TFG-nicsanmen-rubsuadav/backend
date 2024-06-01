@@ -48,9 +48,10 @@ export const login = async (req, res) => {
       email,
       password
     );
+    const userId = userCredential.user.uid;
 
     const token = await userCredential.user.getIdToken();
-    res.status(200).json({ token, userRole});
+    res.status(200).json({ token, userRole, userId });
   } catch (error) {
     handleLoginError(error, res);
   }
