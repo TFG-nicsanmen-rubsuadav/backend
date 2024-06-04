@@ -8,6 +8,7 @@ import {
   getNumberOfRestaurants,
   getRestaurantById,
   getRestaurantByUser,
+  getRestaurantOpinions,
   getRestaurantVisits,
   getRestaurantVisitsByDate,
   getRestaurantVisitsByRange,
@@ -26,6 +27,7 @@ router.get("/restaurants/numberOfOpinions", getNumberOfOpinions);
 router.get("/restaurant/search", searchRestaurant);
 router.get("/restaurant/restaurantByUser", getRestaurantByUser);
 router.get("/restaurant/:restaurantId", getRestaurantById);
+router.get("/restaurant/:restaurantId/opinions", getRestaurantOpinions);
 router.get("/restaurant/:restaurantId/visit", updateRestaurantVisits);
 router.get("/restaurant/:restaurantId/visits", getRestaurantVisits);
 router.get("/restaurant/:restaurantId/visitsByDate", getRestaurantVisitsByDate);
