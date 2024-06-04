@@ -199,3 +199,13 @@ describe("Testing getting restaurant visits by range", () => {
     expect(res.body.visits).toBe(0);
   });
 });
+
+describe("Testing getting restaurant opinions", () => {
+  it("Can get restaurant opinions", async () => {
+    const res = await request(app).get(
+      `/api/restaurant/${restaurantId}/opinions`
+    );
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBeGreaterThan(0);
+  });
+});

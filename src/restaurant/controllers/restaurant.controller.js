@@ -3,6 +3,9 @@ import {
   doc,
   getDoc,
   getDocs,
+  limit,
+  orderBy,
+  query,
   updateDoc,
 } from "firebase/firestore";
 
@@ -117,6 +120,25 @@ export const getNumberOfOpinions = async (req, res) => {
     totalOpinions += opinionsSnapshot.size;
   }
   return res.status(200).json({ numberOfOpinions: totalOpinions });
+};
+
+export const getRestaurantOpinions = async (req, res) => {
+  const { restaurantId } = req.params;
+  const { l } = req.query;
+  const restaurant = await getDoc(
+    doc(FIREBASE_DB, "restaurants", restaurantId)
+  );
+  let opinionsQuery = query(
+    collection(restaurant.ref, "opinions"),
+    orderBy("rating", "desc"),
+    limit(l ? Number(l) : 5)
+  );
+  const opinionsSnapshot = await getDocs(opinionsQuery);
+  const opinions = [];
+  opinionsSnapshot.forEach((opinion) => {
+    opinions.push({ ...opinion.data(), id: opinion.id });
+  });
+  return res.status(200).json(opinions);
 };
 
 export const getRestaurants = async (req, res) => {
