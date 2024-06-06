@@ -6,13 +6,15 @@ import app, { saveDataToFirebase } from "../../app";
 import restaurantData from "../../SR/test/initialRestaurantData.js";
 import { FIREBASE_DB } from "../../../firebaseConfig.js";
 import { authenticateUser } from "../../auth/test/utils.js";
-import { initialData } from "./initialOwnerId.js";
+import { initialData, initialData2 } from "./initialOwnerId.js";
 
 let restaurantId;
 let restaurantId2;
 let restaurantId3;
 let restaurantId4;
+let restaurantId5;
 let userId;
+let userId2;
 
 beforeAll(async () => {
   await saveDataToFirebase(restaurantData);
@@ -24,6 +26,7 @@ beforeEach(async () => {
   restaurantId2 = snapshotData.docs[1].id;
   restaurantId3 = snapshotData.docs[2].id;
   restaurantId4 = snapshotData.docs[3].id;
+  restaurantId5 = snapshotData.docs[4].id;
 }, 20000);
 
 describe("Getting all the restaurants", () => {
@@ -207,5 +210,34 @@ describe("Testing getting restaurant opinions", () => {
     );
     expect(res.statusCode).toBe(200);
     expect(res.body.length).toBeGreaterThan(0);
+  });
+});
+
+describe("Testing restaurant count", () => {
+  it("Can update restaurantCount", async () => {
+    const res = await request(app).put(
+      `/api/restaurant/${restaurantId}/updateCount`
+    );
+    expect(res.statusCode).toBe(200);
+  });
+  it("Can't update restaurantCount (another restaurant)", async () => {
+    const authRes = await authenticateUser(initialData2, app);
+    userId2 = authRes.uid;
+    restaurantData[4].ownerId = userId2;
+    const res = await request(app).put(
+      `/api/restaurant/${restaurantId5}/updateCount`
+    );
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toEqual({});
+  });
+});
+
+describe("Testing getRestaurantCount", () => {
+  it("Can get restaurantCount", async () => {
+    const res = await request(app).get(
+      `/api/restaurant/${restaurantId}/getCount`
+    );
+    expect(res.statusCode).toBe(200);
+    expect(res.body.count).toBeGreaterThan(0);
   });
 });
