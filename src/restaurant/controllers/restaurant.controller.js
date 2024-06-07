@@ -161,6 +161,27 @@ export const getRestaurantById = async (req, res) => {
   return res.status(200).json({ ...restaurant.data(), id: restaurant.id });
 };
 
+export const updateRestaurantCount = async (req, res) => {
+  const { restaurantId } = req.params;
+  const restaurant = await getDoc(
+    doc(FIREBASE_DB, "restaurants", restaurantId)
+  );
+  if (!restaurant.data().ownerId) {
+    const currentCount = restaurant.data().count || 0;
+    await updateDoc(restaurant.ref, { count: currentCount + 1  });
+    return res.status(200).json({ message: restaurant.data().count });
+  }
+  return res.status(200).json({ ...restaurant.data(), id: restaurant.id });
+};
+
+export const getRestaurantCount = async (req, res) => {
+  const { restaurantId } = req.params;
+  const restaurant = await getDoc(
+    doc(FIREBASE_DB, "restaurants", restaurantId)
+  );
+  return res.status(200).json({ count: restaurant.data().count });
+}
+
 export const getRestaurantByUser = async (req, res) => {
   const { userId } = req.query;
   const restaurants = await getDocs(collection(FIREBASE_DB, "restaurants"));

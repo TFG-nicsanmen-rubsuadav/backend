@@ -8,12 +8,14 @@ import {
   getNumberOfRestaurants,
   getRestaurantById,
   getRestaurantByUser,
+  getRestaurantCount,
   getRestaurantOpinions,
   getRestaurantVisits,
   getRestaurantVisitsByDate,
   getRestaurantVisitsByRange,
   getRestaurants,
   searchRestaurant,
+  updateRestaurantCount,
   updateRestaurantVisits,
 } from "../controllers/restaurant.controller.js";
 
@@ -27,6 +29,8 @@ router.get("/restaurants/numberOfOpinions", getNumberOfOpinions);
 router.get("/restaurant/search", searchRestaurant);
 router.get("/restaurant/restaurantByUser", getRestaurantByUser);
 router.get("/restaurant/:restaurantId", getRestaurantById);
+router.put("/restaurant/:restaurantId/updateCount", updateRestaurantCount);
+router.get("/restaurant/:restaurantId/getCount", getRestaurantCount);
 router.get("/restaurant/:restaurantId/opinions", getRestaurantOpinions);
 router.get("/restaurant/:restaurantId/visit", updateRestaurantVisits);
 router.get("/restaurant/:restaurantId/visits", getRestaurantVisits);
