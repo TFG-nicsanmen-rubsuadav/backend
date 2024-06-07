@@ -1,7 +1,7 @@
 import express from "express";
 import morgan from "morgan";
 import cors from "cors";
-import { collection, addDoc } from "firebase/firestore";
+import { collection, addDoc, getDocs } from "firebase/firestore";
 import expressOasGenerator from "express-oas-generator";
 
 // local imports
@@ -32,6 +32,11 @@ app.use("/auth/", deleteUserRoutes);
 app.use("/api/", recommendationRoutes);
 app.use("/api/", menuRoutes);
 app.use("/api/", restaurantRoutes);
+
+app.get("/scraping-data", async (req, res) => {
+  const data = await getDocs(collection(FIREBASE_DB, "scrapping-data"));
+  return res.status(200).json(data.docs[0].data());
+});
 
 app.get("/scrapping", async (req, res) => {
   const data = await getDataFromWebPage();
