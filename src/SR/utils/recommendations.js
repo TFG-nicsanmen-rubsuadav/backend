@@ -29,6 +29,9 @@ function createFeatureMatrix(restaurants) {
     featureMatrix.push({ id: restaurant.id, vector: featureVector });
   }
 
+  // Ordenamos la matriz de caracteristicas para que los restaurantes con ownerId aparezcan primero
+  featureMatrix.sort((a, b) => b.ownerId - a.ownerId);
+
   return featureMatrix;
 }
 
