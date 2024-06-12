@@ -17,6 +17,7 @@ import deleteUserRoutes from "./auth/routes/deleteUser.routes.js";
 import recommendationRoutes from "./SR/routes/recommendations.routes.js";
 import menuRoutes from "./menu/routes/menu.routes.js";
 import restaurantRoutes from "./restaurant/routes/restaurant.routes.js";
+import { checkAdmin } from "./auth/middlewares/checkRoleAdmin.js";
 
 const app = express();
 
@@ -38,7 +39,7 @@ app.get("/scraping-data", async (req, res) => {
   return res.status(200).json(data.docs[0].data());
 });
 
-app.get("/scrapping", async (req, res) => {
+app.get("/scrapping", checkAdmin, async (req, res) => {
   const data = await getDataFromWebPage();
   await saveDataToFirebase(data);
   res.status(200).send(data);
