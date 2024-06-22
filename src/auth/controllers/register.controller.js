@@ -1,5 +1,11 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { doc, setDoc, updateDoc } from "firebase/firestore";
+import {
+  collection,
+  doc,
+  getDocs,
+  setDoc,
+  updateDoc,
+} from "firebase/firestore";
 
 // local imports
 import { FIREBASE_DB, FIREBASE_AUTH } from "../../../firebaseConfig.js";
@@ -9,6 +15,7 @@ import {
   populateUser,
   getCheckoutSession,
 } from "../utils/utils.js";
+import { createRestaurantMenu } from "../../menu/models/models.js";
 
 const roles = ["owner", "customer", "admin"];
 
@@ -65,6 +72,18 @@ export const register = async (req, res) => {
       await updateDoc(userDoc, { restaurantId: restId });
       await updateDoc(restaurantDoc, { ownerId: user.uid });
       const { sessionId } = await getCheckoutSession(user, req, restId);
+      const restaurants = await getDocs(collection(FIREBASE_DB, "restaurants"));
+      const restaurantsArray = [];
+      restaurants.forEach((restaurant) => {
+        if (restaurant.data().ownerId === user.uid) {
+          restaurantsArray.push({ ...restaurant.data(), id: restaurant.id });
+        }
+      });
+
+      const restaurantId = restaurantsArray[0].id;
+
+      await createRestaurantMenu(restaurantId, "Menu", "Menu", true);
+
       return res.status(201).json({ token, uid: user.uid, sessionId, rol });
     }
 

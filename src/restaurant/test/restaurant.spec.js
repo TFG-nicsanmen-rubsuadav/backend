@@ -241,3 +241,13 @@ describe("Testing getRestaurantCount", () => {
     expect(res.body.count).toBeGreaterThan(0);
   });
 });
+
+describe("Tetsing getRestaurantsWithoutOwner", () => {
+  it("Can get restaurants without owner", async () => {
+    const res = await request(app).get(
+      "/api/restaurants/restaurantsWithoutOwner"
+    );
+    expect(res.statusCode).toBe(200);
+    expect(res.body.length).toBeGreaterThan(0);
+  });
+});

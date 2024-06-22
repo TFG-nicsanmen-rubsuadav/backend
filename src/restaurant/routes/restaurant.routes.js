@@ -14,6 +14,7 @@ import {
   getRestaurantVisitsByDate,
   getRestaurantVisitsByRange,
   getRestaurants,
+  getRestaurantsWithoutOwner,
   searchRestaurant,
   updateRestaurantCount,
   updateRestaurantVisits,
@@ -28,6 +29,7 @@ router.get("/restaurants/cities", getAllCities);
 router.get("/restaurants/numberOfOpinions", getNumberOfOpinions);
 router.get("/restaurant/search", searchRestaurant);
 router.get("/restaurant/restaurantByUser", getRestaurantByUser);
+router.get("/restaurants/restaurantsWithoutOwner", getRestaurantsWithoutOwner);
 router.get("/restaurant/:restaurantId", getRestaurantById);
 router.put("/restaurant/:restaurantId/updateCount", updateRestaurantCount);
 router.get("/restaurant/:restaurantId/getCount", getRestaurantCount);

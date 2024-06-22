@@ -194,6 +194,17 @@ export const getRestaurantByUser = async (req, res) => {
   return res.status(200).json(restaurantsArray);
 };
 
+export const getRestaurantsWithoutOwner = async (req, res) => {
+  const restaurants = await getDocs(collection(FIREBASE_DB, "restaurants"));
+  const restaurantsArray = [];
+  restaurants.forEach((restaurant) => {
+    if (restaurant.data().ownerId === undefined) {
+      restaurantsArray.push({ restaurantName: restaurant.data().restaurantName, id: restaurant.id });
+    }
+  });
+  return res.status(200).json(restaurantsArray);
+};
+
 export const searchRestaurant = async (req, res) => {
   const { name, city } = req.query;
   if (!name || !city) {

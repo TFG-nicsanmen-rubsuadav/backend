@@ -4,6 +4,7 @@ import {
   updateDoc,
   doc,
   deleteDoc,
+  setDoc,
 } from "firebase/firestore";
 
 // local imports
@@ -16,13 +17,15 @@ export async function createRestaurantMenu(
   description,
   available
 ) {
-  const menuCollection = collection(
+  console.log("restaurantId", restaurantId);
+  const menuCollection = doc(
     FIREBASE_DB,
     "restaurants",
     restaurantId,
-    "menu"
+    "menu",
+    "zUKq6KT3LRmYAe2yLOCR"
   );
-  await addDoc(menuCollection, {
+  await setDoc(menuCollection, {
     name,
     description,
     available,
